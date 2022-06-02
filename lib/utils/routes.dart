@@ -1,0 +1,61 @@
+import 'export.dart';
+
+class Routes{
+    static Route<dynamic>? generateRoute(RouteSettings settings){
+      final args = settings.arguments;
+
+      switch(settings.name){
+        case "/splash" :
+          return MaterialPageRoute(
+              builder: (_) => SplashScreen()
+          );
+        case "/initial" :
+          return MaterialPageRoute(
+              builder: (_) => InitialScreen()
+          );
+        case "/enterprise" :
+          return MaterialPageRoute(
+              builder: (_) => RegisterEnterpriseScreen()
+          );
+        case "/login" :
+          return MaterialPageRoute(
+              builder: (_) => LoginScreen()
+          );
+        case "/home_enterprise" :
+          return MaterialPageRoute(
+              builder: (_) => HomeEnterpriseScreen()
+          );
+        case "/profile" :
+          return MaterialPageRoute(
+              builder: (_) => ProfileScreen()
+          );
+        case "/definition" :
+          return MaterialPageRoute(
+              builder: (_) => DefinitionScreen()
+          );
+        case "/waiting" :
+          return MaterialPageRoute(
+              builder: (_) => WaitingScreen()
+          );
+        case "/registerBank" :
+          return MaterialPageRoute(
+              builder: (_) => RegisterBankScreen()
+          );
+        default :
+          _erroRota();
+      }
+    }
+    static  Route <dynamic> _erroRota(){
+      return MaterialPageRoute(
+          builder:(_){
+            return Scaffold(
+              appBar: AppBar(
+                title: Text("Tela em desenvolvimento"),
+              ),
+              body: Center(
+                child: Text("Tela em desenvolvimento"),
+              ),
+            );
+          });
+    }
+  }
