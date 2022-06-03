@@ -7,8 +7,8 @@ class ButtonCustom extends StatelessWidget {
   final Color colorButton;
   final Color colorText;
   final Color colorBorder;
-  double? widthCustom = 0.8;
-  double? heightCustom = 0.07;
+  final widthCustom;
+  final heightCustom;
 
   ButtonCustom({
     required this.onPressed,
@@ -17,8 +17,8 @@ class ButtonCustom extends StatelessWidget {
     required this.colorButton,
     required this.colorText,
     required this.colorBorder,
-    this.widthCustom,
-    this.heightCustom
+    required this.widthCustom,
+    required this.heightCustom
   });
 
   @override

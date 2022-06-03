@@ -53,6 +53,10 @@ class Routes{
           return MaterialPageRoute(
               builder: (_) => WhoWeAreScreen()
           );
+        case "/finance" :
+          return MaterialPageRoute(
+              builder: (_) => FinanceScreen()
+          );
         default :
           _erroRota();
       }

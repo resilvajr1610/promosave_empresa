@@ -194,6 +194,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
               SizedBox(height: 10),
               ButtonCustom(
                   onPressed: ()=>Navigator.pushReplacementNamed(context, '/home_enterprise'),
+                  widthCustom: 0.75,
+                  heightCustom: 0.07,
                   text:  widget.buttonText,
                   size: 14,
                   colorButton: PaletteColor.primaryColor,

@@ -30,6 +30,8 @@ class _WaitingScreenState extends State<WaitingScreen> {
                 ),
                 SizedBox(height: height*0.1),
                 ButtonCustom(
+                    widthCustom: 0.75,
+                    heightCustom: 0.07,
                     onPressed: ()=>Navigator.pushReplacementNamed(context, '/splash'),
                     text: 'Obrigado pelo seu cadastro! Entraremos em contato em até 24 horas para finalizá-lo.\nAtenciosamente,\n\nEquipe PromoSave.',
                     size: 20.0,

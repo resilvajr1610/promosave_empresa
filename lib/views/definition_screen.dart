@@ -44,6 +44,8 @@ class _DefinitionScreenState extends State<DefinitionScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ButtonCustom(
+                  widthCustom: 0.75,
+                  heightCustom: 0.07,
                   onPressed: ()=>Navigator.pushNamed(context, '/enterprise'),
                   text: "Sou uma loja",
                   size: 14,
@@ -55,6 +57,8 @@ class _DefinitionScreenState extends State<DefinitionScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ButtonCustom(
+                  widthCustom: 0.75,
+                  heightCustom: 0.07,
                   onPressed: (){},
                   text: "Sou um entregador",
                   size: 14,

@@ -15,6 +15,7 @@ export '../views/data_bank_screen.dart';
 export '../views/add_product_screen.dart';
 export '../views/requests_enterprise_screen.dart';
 export '../views/who_we_are_screen.dart';
+export '../views/finance_screen.dart';
 
 export '../widgets/buttom_custom.dart';
 export '../widgets/inputRegister.dart';
@@ -28,6 +29,7 @@ export '../widgets/drawer_custom.dart';
 export '../widgets/title_drawer.dart';
 export '../widgets/text_custom_address.dart';
 export '../widgets/container_requests_enterprise.dart';
+export '../widgets/container_finance.dart';
 
 export '../models/user_model.dart';
 export '../models/search_model.dart';
