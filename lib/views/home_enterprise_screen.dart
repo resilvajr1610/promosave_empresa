@@ -14,6 +14,7 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   List _resultsList = [];
   List _allResults = [];
+  String name="";
 
   _data() async {
     Stream<QuerySnapshot> stream = db.collection("user").where('idUser',isEqualTo: FirebaseAuth.instance.currentUser?.uid).snapshots();
@@ -29,6 +30,16 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
     resultSearchList();
     return "complete";
   }
+
+  _dataEnterprise()async{
+    DocumentSnapshot snapshot = await db.collection("enterprise")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    Map<String,dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+    name = data?["name"];
+  }
+
   _search() {
     resultSearchList();
   }
@@ -55,6 +66,7 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
   void initState() {
     super.initState();
     _data();
+    _dataEnterprise();
     _controllerSearch.addListener(_search);
   }
 
@@ -65,7 +77,7 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      drawer: DrawerCustom(),
+      drawer: DrawerCustom(enterprise: name,photo: 'assets/image/logo.png',),
       backgroundColor: PaletteColor.white,
       appBar: AppBar(
         elevation: 0,
@@ -75,11 +87,12 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
+          height: height*0.9,
           padding: EdgeInsets.all(12),
           alignment: Alignment.topCenter,
           child: Column(
             children: [
-              TextCustom(text: 'NOME DA EMPRESA',size: 16.0,color: PaletteColor.grey,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
+              TextCustom(text: name.toUpperCase(),size: 16.0,color: PaletteColor.grey,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
               SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -132,7 +145,7 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
               SizedBox(height: 10),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: PaletteColor.primaryColor,minimumSize: Size(width*0.5, 40),maximumSize: Size(width*0.7,40)),
-                  onPressed: (){},
+                  onPressed: ()=>Navigator.pushReplacementNamed(context,'/requests_enterprise'),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -155,24 +168,31 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
                 alignment: Alignment.centerLeft,
                 child: TextCustom(fontWeight: FontWeight.bold,color: PaletteColor.primaryColor, text: 'Meus Produtos', size: 16.0,textAlign: TextAlign.center,)),
               Container(
-                height: height*0.5,
+                height: height*0.45,
                 child: GridView.count(
                   crossAxisCount: 2,
                   children: List.generate(_resultsList.length+1, (index) {
 
                     if(index == 0){
-                      return Container(
-                        alignment: Alignment.center,
-                        margin: EdgeInsets.all(4),
-                        color: PaletteColor.greyInput,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.add_circle,color: PaletteColor.white,size: 30),
-                            SizedBox(height: 10),
-                            TextCustom(fontWeight: FontWeight.bold,color: PaletteColor.white, text: 'Adicionar novo\nproduto', size: 12.0,textAlign: TextAlign.center,),
-                          ],
-                        ));
+                      return GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (_) => AddProductScreen(text:'Adicionar Produto',buttonText: 'Adicionar',)
+                          ));
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.all(4),
+                          color: PaletteColor.greyInput,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add_circle,color: PaletteColor.white,size: 30),
+                              SizedBox(height: 10),
+                              TextCustom(fontWeight: FontWeight.bold,color: PaletteColor.white, text: 'Adicionar novo\nproduto', size: 12.0,textAlign: TextAlign.center,),
+                            ],
+                          )),
+                      );
                     }
 
                     DocumentSnapshot item = _resultsList[index-1];
@@ -181,10 +201,17 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
                     final photo = item["photo"];
                     final price = item["price"];
 
-                    return CardHome(image: photo,name: name.toUpperCase(),price: price.toStringAsFixed(2).replaceAll(".", ","));
+                    return GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (_) => AddProductScreen(text:'Alterar Produto',buttonText: 'Alterar',)
+                          ));
+                        },
+                        child: CardHome(image: photo,name: name.toUpperCase(),price: price.toStringAsFixed(2).replaceAll(".", ",")));
                   }),
                 ),
               ),
+              SizedBox(height: 20),
             ],
           ),
         ),

@@ -8,7 +8,24 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
+  FirebaseFirestore db = FirebaseFirestore.instance;
   final _controllerPhone = TextEditingController();
+  String name="";
+
+  _dataEnterprise()async{
+    DocumentSnapshot snapshot = await db.collection("enterprise")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    Map<String,dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+    name = data?["name"];
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _dataEnterprise();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      drawer: DrawerCustom(),
+      drawer: DrawerCustom(enterprise: name,photo: 'assets/image/logo.png',),
       backgroundColor: PaletteColor.white,
       appBar: AppBar(
         elevation: 0,
@@ -178,8 +195,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: ButtonCustom(
                   onPressed: (){},
+                  heightCustom: 0.07,
+                  widthCustom: 0.8,
                   text: "Salvar",
-                  size: 0,
+                  size: 14.0,
                   colorButton: PaletteColor.primaryColor,
                   colorText: PaletteColor.white,
                   colorBorder: PaletteColor.primaryColor,

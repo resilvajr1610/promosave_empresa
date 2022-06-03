@@ -1,6 +1,10 @@
 import '../utils/export.dart';
 
 class DrawerCustom extends StatelessWidget {
+  String enterprise;
+  final photo;
+
+  DrawerCustom({required this.enterprise, required this.photo});
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +27,16 @@ class DrawerCustom extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: CircleAvatar(
                       backgroundColor: PaletteColor.primaryColor,
-                      backgroundImage: AssetImage('assets/image/logo.png'),
+                      backgroundImage: AssetImage(photo),
                     ),
                   ),
-                  TextCustom(text: 'Guilia Maria', size: 16.0, color: PaletteColor.primaryColor, fontWeight: FontWeight.bold,textAlign: TextAlign.center,)
+                  TextCustom(text: enterprise.toUpperCase(), size: 16.0, color: PaletteColor.primaryColor, fontWeight: FontWeight.bold,textAlign: TextAlign.center,)
                 ],
               ),
             ),
-            SizedBox(height: height*0.08),
+            SizedBox(height: height*0.02),
             TitleDrawer(
-              onTap: ()=>Navigator.pushNamed(context, '/navigation'),
+              onTap: ()=>Navigator.pushNamed(context, '/home_enterprise'),
               title: 'home',
               icon: Icons.home_outlined,
             ),
@@ -42,12 +46,27 @@ class DrawerCustom extends StatelessWidget {
               icon: Icons.account_circle_outlined,
             ),
             TitleDrawer(
+              onTap: ()=>Navigator.pushNamed(context, '/dataBank'),
+              title: 'Dados bancários',
+              icon: Icons.credit_card_outlined,
+            ),
+            TitleDrawer(
+              onTap: ()=>Navigator.pushNamed(context, '/finance'),
+              title: 'Finanças',
+              icon: Icons.attach_money,
+            ),
+            TitleDrawer(
+              onTap: ()=>Navigator.pushNamed(context, '/history_requests'),
+              title: 'Histórico de pedidos',
+              icon: Icons.calendar_today_outlined,
+            ),
+            TitleDrawer(
                 onTap: (){},
                 title: 'Perguntas frequentes',
                 icon: Icons.help_outline,
             ),
             TitleDrawer(
-                onTap: (){},
+              onTap: ()=>Navigator.pushNamed(context, '/who'),
                 title: 'Quem Somos',
                 icon: Icons.people_outline,
             ),

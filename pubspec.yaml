@@ -19,6 +19,7 @@ dependencies:
   firebase_storage: ^10.0.1
   brasil_fields: ^1.4.4
   smooth_star_rating_nsafe: ^1.0.0+1
+  font_awesome_flutter: ^10.1.0
 
 dev_dependencies:
   flutter_test:

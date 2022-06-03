@@ -12,6 +12,7 @@ class InputRegister extends StatelessWidget {
   final icons;
   final colorBorder;
   final background;
+  int? maxline = 1;
 
   InputRegister({
     required this.controller,
@@ -20,6 +21,7 @@ class InputRegister extends StatelessWidget {
     required this.keyboardType,
     required this.width,
     this.inputFormatters,
+    this.maxline,
     required this.sizeIcon,
     required this.icons,
     required this.colorBorder,
@@ -50,6 +52,7 @@ class InputRegister extends StatelessWidget {
               textAlign: TextAlign.start,
               keyboardType: this.keyboardType,
               textAlignVertical: TextAlignVertical.center,
+              maxLines: maxline,
               style: TextStyle(
                 color: Colors.black54,
                 fontSize: this.fonts,

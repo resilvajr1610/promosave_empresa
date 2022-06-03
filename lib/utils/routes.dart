@@ -25,6 +25,10 @@ class Routes{
           return MaterialPageRoute(
               builder: (_) => HomeEnterpriseScreen()
           );
+        case "/requests_enterprise" :
+          return MaterialPageRoute(
+              builder: (_) => RequestsEnterpriseScreen()
+          );
         case "/profile" :
           return MaterialPageRoute(
               builder: (_) => ProfileScreen()
@@ -40,6 +44,14 @@ class Routes{
         case "/registerBank" :
           return MaterialPageRoute(
               builder: (_) => RegisterBankScreen()
+          );
+        case "/dataBank" :
+          return MaterialPageRoute(
+              builder: (_) => DataBankScreen()
+          );
+        case "/who" :
+          return MaterialPageRoute(
+              builder: (_) => WhoWeAreScreen()
           );
         default :
           _erroRota();

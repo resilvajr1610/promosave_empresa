@@ -7,6 +7,8 @@ class ButtonCustom extends StatelessWidget {
   final Color colorButton;
   final Color colorText;
   final Color colorBorder;
+  double? widthCustom = 0.8;
+  double? heightCustom = 0.07;
 
   ButtonCustom({
     required this.onPressed,
@@ -15,6 +17,8 @@ class ButtonCustom extends StatelessWidget {
     required this.colorButton,
     required this.colorText,
     required this.colorBorder,
+    this.widthCustom,
+    this.heightCustom
   });
 
   @override
@@ -26,7 +30,7 @@ class ButtonCustom extends StatelessWidget {
     return ElevatedButton(
           style: ElevatedButton.styleFrom(
             primary: this.colorButton,
-            minimumSize: Size(width*0.8, height*0.07),
+            minimumSize: Size(width*widthCustom!, height*heightCustom!),
             side: BorderSide(width: 3,color: colorBorder),
           ),
         onPressed: onPressed,

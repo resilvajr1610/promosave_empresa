@@ -1,12 +1,12 @@
 import '../utils/export.dart';
 
-class RegisterBankScreen extends StatefulWidget {
+class DataBankScreen extends StatefulWidget {
 
   @override
-  _RegisterBankScreenState createState() => _RegisterBankScreenState();
+  _DataBankScreenState createState() => _DataBankScreenState();
 }
 
-class _RegisterBankScreenState extends State<RegisterBankScreen> {
+class _DataBankScreenState extends State<DataBankScreen> {
 
   FirebaseFirestore db = FirebaseFirestore.instance;
   final _controllerBank = TextEditingController();
@@ -16,6 +16,7 @@ class _RegisterBankScreenState extends State<RegisterBankScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   BankModel _bankModel = BankModel();
   String _error="";
+  String name="";
 
   _verification(){
 
@@ -65,6 +66,23 @@ class _RegisterBankScreenState extends State<RegisterBankScreen> {
     => Navigator.pushReplacementNamed(context, "/splash"));
   }
 
+  _dataEnterprise()async{
+    DocumentSnapshot snapshot = await db.collection("enterprise")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    Map<String,dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+    setState(() {
+      name = data?["name"];
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _dataEnterprise();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -74,10 +92,11 @@ class _RegisterBankScreenState extends State<RegisterBankScreen> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: PaletteColor.white,
+      drawer: DrawerCustom(enterprise: name,photo: 'assets/image/logo.png',),
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: PaletteColor.primaryColor,
-        title: TextCustom(text: 'Cadastro',size: 24.0,color: PaletteColor.white,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
+        title: TextCustom(text: 'Dados bancários',size: 24.0,color: PaletteColor.white,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
       ),
       body: SingleChildScrollView(
         child: Container(
