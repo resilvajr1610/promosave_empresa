@@ -16,6 +16,7 @@ export '../views/add_product_screen.dart';
 export '../views/requests_enterprise_screen.dart';
 export '../views/who_we_are_screen.dart';
 export '../views/finance_screen.dart';
+export '../views/history_requests_enterprise_screen.dart';
 
 export '../widgets/buttom_custom.dart';
 export '../widgets/inputRegister.dart';

@@ -13,6 +13,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
   final textButton;
   final client;
   final type;
+  final screen;
 
   ContainerRequestsEnterprise({
     required this.onTapIcon,
@@ -26,6 +27,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
     required this.contSweet,
     required this.textButton,
     required this.type,
+    required this.screen,
   });
 
   @override
@@ -154,7 +156,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                 ),
               ],
             ),
-            Container(
+            screen !='history'? Container(
               alignment: Alignment.centerRight,
               padding: EdgeInsets.symmetric(horizontal: 45),
               child: textButton != 'A caminho'? ButtonCustom(
@@ -167,7 +169,34 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                   colorText: PaletteColor.white,
                   colorBorder: PaletteColor.primaryColor
               ):TextCustom(text: textButton,size: 12.0,color: PaletteColor.primaryColor,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
-            )
+            ):Container(),
+            screen =='history'?Container(
+              margin: EdgeInsets.only(right: 42),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 4,vertical: 5),
+                        width: width*0.45,
+                        child: TextCustom(
+                            text: 'Avalição do cliente',color: PaletteColor.grey,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+                        ),
+                      ),
+                      Spacer(),
+                      RatingCustom(rating: 1.0)
+                    ],
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 4),
+                    width: width,
+                    child: TextCustom(
+                        text: 'Comentário do cliente',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+                    ),
+                  ),
+                ],
+              ),
+            ):Container()
           ],
         ):Container(),
       ],

@@ -57,6 +57,10 @@ class Routes{
           return MaterialPageRoute(
               builder: (_) => FinanceScreen()
           );
+        case "/history_requests" :
+          return MaterialPageRoute(
+              builder: (_) => HistoryRequestsEnterpriseScreen()
+          );
         default :
           _erroRota();
       }

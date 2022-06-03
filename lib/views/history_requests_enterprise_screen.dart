@@ -1,12 +1,12 @@
 import '../utils/export.dart';
 
-class RequestsEnterpriseScreen extends StatefulWidget {
+class HistoryRequestsEnterpriseScreen extends StatefulWidget {
 
   @override
-  _RequestsEnterpriseScreenState createState() => _RequestsEnterpriseScreenState();
+  _HistoryRequestsEnterpriseScreenState createState() => _HistoryRequestsEnterpriseScreenState();
 }
 
-class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
+class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpriseScreen> {
 
   FirebaseFirestore db = FirebaseFirestore.instance;
   String name="";
@@ -16,6 +16,16 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
   bool showDetailsRequests4=false;
   bool showDetailsRequests5=false;
   bool showDetailsRequests6=false;
+  final _itemsPeriod = ['últimos 7 dias','últimos 15 dias','últimos 30 dias'];
+  String? _selectedPediod;
+
+  DropdownMenuItem<String>  buildMenuItem(String item)=>DropdownMenuItem(
+    value: item,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: TextCustom(text: item,size: 16.0,textAlign: TextAlign.center,color: PaletteColor.grey, fontWeight: FontWeight.normal,),
+    ),
+  );
 
   _dataEnterprise()async{
     DocumentSnapshot snapshot = await db.collection("enterprise")
@@ -55,22 +65,38 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                 padding: EdgeInsets.symmetric(vertical: 8),
                 width: width,
                 child: TextCustom(
-                    text: 'Pedidos em andamento',color: PaletteColor.grey,size: 16.0,fontWeight: FontWeight.bold,textAlign: TextAlign.center
+                    text: 'Histórico de pedidos',color: PaletteColor.grey,size: 16.0,fontWeight: FontWeight.bold,textAlign: TextAlign.center
                 )
             ),
             Container(
-              height: height*0.7,
+              height: height*0.07,
+              width: width*0.45,
+              decoration: BoxDecoration(
+                color: PaletteColor.white,
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: PaletteColor.greyInput)
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton(
+                  iconEnabledColor: PaletteColor.greyInput,
+                  alignment: Alignment.center,
+                  value: _selectedPediod,
+                  hint: TextCustom(text: "últimos 7 dias",size: 16.0,textAlign: TextAlign.center,color: PaletteColor.grey, fontWeight: FontWeight.normal,),
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12
+                  ),
+                  items: _itemsPeriod.map(buildMenuItem).toList(),
+                  onChanged: (value) => setState(() => _selectedPediod = value.toString()),
+                ),
+              ),
+            ),
+            Container(
+              height: height*0.65,
               child: ListView(
                 children: [
-                  Container(
-                      padding: EdgeInsets.symmetric(horizontal: 24),
-                      width: width,
-                      child: TextCustom(
-                          text: 'Para aceitar',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
-                      )
-                  ),
                   ContainerRequestsEnterprise(
-                    screen: 'request',
+                    screen: 'history',
                     idRequests: 0001,
                     date: '03/06/2022',
                     time: '18:00',
@@ -92,7 +118,7 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                     },
                   ),
                   ContainerRequestsEnterprise(
-                    screen: 'request',
+                    screen: 'history',
                     showDetailsRequests: showDetailsRequests2,
                     idRequests: 0002,
                     date: '03/06/2022',
@@ -113,15 +139,8 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                       });
                     },
                   ),
-                  Container(
-                      padding: EdgeInsets.symmetric(horizontal: 24,vertical: 10),
-                      width: width,
-                      child: TextCustom(
-                          text: 'Aguardando preparo',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
-                      )
-                  ),
                   ContainerRequestsEnterprise(
-                    screen: 'request',
+                    screen: 'history',
                     idRequests: 0003,
                     date: '03/06/2022',
                     time: '18:00',
@@ -143,7 +162,7 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                     },
                   ),
                   ContainerRequestsEnterprise(
-                    screen: 'request',
+                    screen: 'history',
                     showDetailsRequests: showDetailsRequests4,
                     idRequests: 0004,
                     date: '03/06/2022',
@@ -164,15 +183,8 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                       });
                     },
                   ),
-                  Container(
-                      padding: EdgeInsets.symmetric(horizontal: 24,vertical: 10),
-                      width: width,
-                      child: TextCustom(
-                          text: 'Aguardando entrega',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
-                      )
-                  ),
                   ContainerRequestsEnterprise(
-                    screen: 'request',
+                    screen: 'history',
                     idRequests: 0005,
                     date: '03/06/2022',
                     time: '18:00',
@@ -194,7 +206,7 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                     },
                   ),
                   ContainerRequestsEnterprise(
-                    screen: 'request',
+                    screen: 'history',
                     showDetailsRequests: showDetailsRequests6,
                     idRequests: 0006,
                     date: '03/06/2022',
