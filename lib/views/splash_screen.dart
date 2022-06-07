@@ -1,4 +1,4 @@
-import '../utils/export.dart';
+import '../Utils/export.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);

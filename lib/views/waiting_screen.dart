@@ -1,4 +1,4 @@
-import '../utils/export.dart';
+import '../Utils/export.dart';
 
 class WaitingScreen extends StatefulWidget {
   const WaitingScreen({Key? key}) : super(key: key);

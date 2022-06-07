@@ -1,4 +1,4 @@
-import '../utils/export.dart';
+import '../Utils/export.dart';
 
 class ProfileScreen extends StatefulWidget {
 
@@ -52,8 +52,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CircleAvatar(
-                  radius: 48,
-                  backgroundColor: PaletteColor.primaryColor,
+                  radius: 40,
+                  backgroundColor: PaletteColor.grey,
                   backgroundImage: AssetImage('assets/image/logo.png'),
                 ),
               ),

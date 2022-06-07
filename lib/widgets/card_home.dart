@@ -1,17 +1,19 @@
-import 'package:flutter/cupertino.dart';
-
-import '../utils/export.dart';
+import '../Utils/export.dart';
 
 class CardHome extends StatelessWidget {
 
   final image;
-  final price;
-  final name;
+  final inPrice;
+  final byPrice;
+  final product;
+  final available;
 
   CardHome({
     required this.image,
-    required this.price,
-    required this.name,
+    required this.inPrice,
+    required this.byPrice,
+    required this.product,
+    required this.available,
 });
 
   @override
@@ -45,15 +47,15 @@ class CardHome extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextCustom(fontWeight: FontWeight.bold,color: PaletteColor.grey, text: name, size: 12.0,textAlign: TextAlign.center,),
+                TextCustom(fontWeight: FontWeight.bold,color: PaletteColor.grey, text: product, size: 12.0,textAlign: TextAlign.center,),
                 Row(
                   children: [
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TextCustom(fontWeight: FontWeight.bold,color: PaletteColor.greyInput, text: '3 Disponíveis', size: 11.0,textAlign: TextAlign.center,),
-                        TextCustom(fontWeight: FontWeight.bold,color: PaletteColor.greyInput, text: '', size: 11.0,textAlign: TextAlign.center,),
+                        TextCustom(fontWeight: FontWeight.bold,color: PaletteColor.greyInput, text: '$available Disponíveis', size: 10.0,textAlign: TextAlign.center,),
+                        TextCustom(fontWeight: FontWeight.bold,color: PaletteColor.greyInput, text: '', size: 10.0,textAlign: TextAlign.center,),
                       ],
                     ),
                     Spacer(),
@@ -61,11 +63,11 @@ class CardHome extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text('de R\$ 30',style: TextStyle(
+                        Text('de $inPrice',style: TextStyle(
                           decoration: TextDecoration.lineThrough,decorationColor: PaletteColor.grey,
-                          fontFamily: 'Nunito',color: PaletteColor.grey,fontSize: 11.0,fontWeight: FontWeight.normal,)
+                          fontFamily: 'Nunito',color: PaletteColor.grey,fontSize: 10.0,fontWeight: FontWeight.normal,)
                         ),
-                        TextCustom(fontWeight: FontWeight.bold,color: PaletteColor.green, text: 'por R\$ 18', size: 12.0,textAlign: TextAlign.center,),
+                        TextCustom(fontWeight: FontWeight.bold,color: PaletteColor.green, text: 'por $byPrice', size: 10.0,textAlign: TextAlign.center,),
                       ],
                     ),
                   ],

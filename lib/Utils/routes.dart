@@ -1,4 +1,4 @@
-import 'export.dart';
+import '../Utils/export.dart';
 
 class Routes{
     static Route<dynamic>? generateRoute(RouteSettings settings){

@@ -1,4 +1,4 @@
-import '../utils/export.dart';
+import '../Utils/export.dart';
 
 class InitialScreen extends StatefulWidget {
   const InitialScreen({Key? key}) : super(key: key);

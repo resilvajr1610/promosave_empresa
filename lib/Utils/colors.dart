@@ -1,4 +1,4 @@
-import 'export.dart';
+import '../Utils/export.dart';
 
 class PaletteColor {
   static const Color white = Colors.white;
