@@ -9,7 +9,6 @@ class HistoryRequestsEnterpriseScreen extends StatefulWidget {
 class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpriseScreen> {
 
   FirebaseFirestore db = FirebaseFirestore.instance;
-  String name="";
   bool showDetailsRequests1=false;
   bool showDetailsRequests2=false;
   bool showDetailsRequests3=false;
@@ -27,21 +26,6 @@ class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpr
     ),
   );
 
-  _dataEnterprise()async{
-    DocumentSnapshot snapshot = await db.collection("enterprise")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
-
-    Map<String,dynamic>? data = snapshot.data() as Map<String, dynamic>?;
-    name = data?["name"];
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _dataEnterprise();
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -49,7 +33,10 @@ class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpr
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      drawer: DrawerCustom(enterprise: name,photo: 'assets/image/logo.png',),
+      drawer: DrawerCustom(
+        enterprise: FirebaseAuth.instance.currentUser!.displayName!,
+        photo: FirebaseAuth.instance.currentUser!.photoURL,
+      ),
       backgroundColor: PaletteColor.white,
       appBar: AppBar(
         elevation: 0,

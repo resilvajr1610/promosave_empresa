@@ -10,7 +10,6 @@ class HomeEnterpriseScreen extends StatefulWidget {
 class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   List _resultsList = [];
-  String name = "";
 
   _data() async {
     var data = await db
@@ -37,8 +36,8 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
 
     return Scaffold(
       drawer: DrawerCustom(
-        enterprise: name,
-        photo: 'assets/image/logo.png',
+        enterprise: FirebaseAuth.instance.currentUser!.displayName!,
+        photo: FirebaseAuth.instance.currentUser!.photoURL,
       ),
       backgroundColor: PaletteColor.white,
       appBar: AppBar(
@@ -58,7 +57,7 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
           child: Column(
             children: [
               TextCustom(
-                text: name.toUpperCase(),
+                text: FirebaseAuth.instance.currentUser!.displayName!.toUpperCase(),
                 size: 16.0,
                 color: PaletteColor.grey,
                 fontWeight: FontWeight.bold,

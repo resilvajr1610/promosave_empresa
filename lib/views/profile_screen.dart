@@ -8,17 +8,98 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
+  FirebaseStorage storage = FirebaseStorage.instance;
   FirebaseFirestore db = FirebaseFirestore.instance;
   final _controllerPhone = TextEditingController();
+  final _controllerAddress = TextEditingController();
+  final _controllerStartHours = TextEditingController();
+  final _controllerFinishHours = TextEditingController();
   String name="";
+  String cnpj="";
+  String email="";
+  String urlPhotoProfile="";
+  String urlPhotoBanner="";
+  bool checkMonday=false;
+  bool checkTuesday=false;
+  bool checkWednesday=false;
+  bool checkThursday=false;
+  bool checkFriday=false;
+  bool checkSaturday=false;
+  bool checkSunday=false;
+  File? picture;
+  bool _sending = false;
 
   _dataEnterprise()async{
     DocumentSnapshot snapshot = await db.collection("enterprise")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
+        .doc(FirebaseAuth.instance.currentUser!.uid).get();
 
     Map<String,dynamic>? data = snapshot.data() as Map<String, dynamic>?;
-    name = data?["name"];
+    setState(() {
+      name = data?["name"];
+      cnpj = data?["cpf"];
+      email = data?["email"];
+      urlPhotoProfile = data?["urlPhotoProfile"];
+      urlPhotoBanner = data?["urlPhotoBanner"];
+    });
+  }
+
+  Future _savePhoto(String name) async {
+    try {
+      final image = await ImagePicker()
+          .pickImage(source: ImageSource.camera, imageQuality: 100);
+      if (image == null) return;
+
+      final imageTemporary = File(image.path);
+      setState(() {
+        this.picture = imageTemporary;
+        setState(() {
+          _sending = true;
+        });
+        _uploadImage(name);
+      });
+    } on PlatformException catch (e) {
+      print('Error : $e');
+    }
+  }
+
+  Future _uploadImage(String name) async {
+    Reference pastaRaiz = storage.ref();
+    Reference arquivo = pastaRaiz.child("profile").child(name+"_"+DateTime.now().toString()+".jpg");
+
+    UploadTask task = arquivo.putFile(picture!);
+
+    Future.delayed(const Duration(seconds: 5), () async {
+      String urlImage = await task.snapshot.ref.getDownloadURL();
+      if (urlImage != null) {
+        setState(() {
+          if(name=='urlPhotoProfile'){
+            urlPhotoProfile = urlImage;
+            User? user = FirebaseAuth.instance.currentUser;
+            user?.updatePhotoURL(urlPhotoProfile);
+          }else{
+            urlPhotoBanner = urlImage;
+          }
+        });
+        _urlImageFirestore(urlImage,name);
+      }
+    });
+  }
+
+  _urlImageFirestore(String url,String name) {
+
+    Map<String, dynamic> dateUpdate = {
+      name: url,
+    };
+
+    db
+        .collection("enterprise")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update(dateUpdate)
+        .then((value) {
+          setState(() {
+            _sending = false;
+          });
+    });
   }
 
   @override
@@ -34,7 +115,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      drawer: DrawerCustom(enterprise: name,photo: 'assets/image/logo.png',),
+      drawer: DrawerCustom(
+        enterprise: FirebaseAuth.instance.currentUser!.displayName!,
+        photo: FirebaseAuth.instance.currentUser!.photoURL,
+      ),
       backgroundColor: PaletteColor.white,
       appBar: AppBar(
         elevation: 0,
@@ -49,61 +133,182 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
+              urlPhotoProfile!=""? Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: CircleAvatar(
-                  radius: 40,
-                  backgroundColor: PaletteColor.grey,
-                  backgroundImage: AssetImage('assets/image/logo.png'),
+                child:GestureDetector(
+                  onTap: ()=>_savePhoto('urlPhotoProfile'),
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundColor: PaletteColor.grey,
+                    backgroundImage: NetworkImage(urlPhotoProfile),
+                  ),
+                ),
+              ):GestureDetector(
+                onTap: ()=>_savePhoto('urlPhotoProfile'),
+                child: Container(
+                  margin: const EdgeInsets.all(8.0),
+                  height: 90,
+                  width: 90,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: PaletteColor.greyInput
+                  ),
+                  child: Icon(Icons.camera_alt,color: PaletteColor.white,size: 50,),
                 ),
               ),
-              TextCustom(text: 'Guilia Maria', size: 14.0, color: PaletteColor.greyInput, fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
-              TextCustom(text: 'giuliamaria@gmail.com', size: 14.0, color: PaletteColor.greyInput, fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              _sending==true?Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Column(
-                    children: [
-                      Container(
-                        width: 70,
-                        height: 70,
-                        margin: EdgeInsets.only(top: 16),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Color(0xffF15622),
-                                Color(0xffF8A78B),
-                              ],
-                            )
-                        ),
-                        child: Center(child: TextCustom(text: 'R\$\n20', size: 16.0, color: PaletteColor.white, fontWeight: FontWeight.w500,textAlign: TextAlign.center,)),
-                      ),
-                      TextCustom(text: 'Dinheiro\npoupado', size: 12.0, color: PaletteColor.primaryColor, fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                  CircularProgressIndicator(color: PaletteColor.primaryColor),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextCustom(text: 'Enviando', size: 14.0, color: PaletteColor.primaryColor, fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
+                  ),
+                ],
+              ):Container(),
+              TextCustom(text: name.toUpperCase(), size: 14.0, color: PaletteColor.greyInput, fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
+              TextCustom(text: 'CNPJ $cnpj', size: 14.0, color: PaletteColor.greyInput, fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
+              TextCustom(text: email, size: 14.0, color: PaletteColor.greyInput, fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
+              Container(
+                  width: width,
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.all(8),
+                  child: TextCustom(text: 'Foto banner', size: 16.0, color: PaletteColor.grey, fontWeight: FontWeight.bold,textAlign: TextAlign.center,)
+              ),
+              urlPhotoBanner!=""?GestureDetector(
+                onTap: ()=>_savePhoto('urlPhotoBanner'),
+                child: Container(
+                  margin: const EdgeInsets.all(4.0),
+                  height: 90,
+                  width: width,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: PaletteColor.greyInput,
+                      image: DecorationImage(
+                      image: NetworkImage(urlPhotoBanner), fit: BoxFit.cover),
+                  ),
+                ),
+              ): GestureDetector(
+                onTap: ()=>_savePhoto('urlPhotoBanner'),
+                child: Container(
+                  margin: const EdgeInsets.all(4.0),
+                  height: 90,
+                  width: width,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: PaletteColor.greyInput
+                  ),
+                  child: Icon(Icons.camera_alt,color: PaletteColor.white,size: 50,),
+                ),
+              ),
+              Container(
+                  width: width,
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.all(8),
+                  child: TextCustom(text: 'Horário de funcionamento:', size: 16.0, color: PaletteColor.grey, fontWeight: FontWeight.bold,textAlign: TextAlign.center,)
+              ),
+              Row(
+                children: [
+                  CheckDays(
+                    check: checkMonday,
+                    onChanged: (value){
+                      setState(() {
+                        checkMonday=value!;
+                      });
+                    }
+                  ),
+                  TextCustom(text: 'Seg',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                  CheckDays(
+                      check: checkTuesday,
+                      onChanged: (value){
+                        setState(() {
+                          checkTuesday=value!;
+                        });
+                      }
+                  ),
+                  TextCustom(text: 'Ter',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                  CheckDays(
+                      check: checkWednesday,
+                      onChanged: (value){
+                        setState(() {
+                          checkWednesday=value!;
+                        });
+                      }
+                  ),
+                  TextCustom(text: 'Qua',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                  CheckDays(
+                      check: checkThursday,
+                      onChanged: (value){
+                        setState(() {
+                          checkThursday=value!;
+                        });
+                      }
+                  ),
+                  TextCustom(text: 'Qui',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                ],
+              ),
+              Row(
+                children: [
+                  CheckDays(
+                      check: checkFriday,
+                      onChanged: (value){
+                        setState(() {
+                          checkFriday=value!;
+                        });
+                      }
+                  ),
+                  TextCustom(text: 'Sex',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                  CheckDays(
+                      check: checkSaturday,
+                      onChanged: (value){
+                        setState(() {
+                          checkSaturday=value!;
+                        });
+                      }
+                  ),
+                  TextCustom(text: 'Sáb',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                  CheckDays(
+                      check: checkSunday,
+                      onChanged: (value){
+                        setState(() {
+                          checkSunday=value!;
+                        });
+                      }
+                  ),
+                  TextCustom(text: 'Dom',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                ],
+              ),
+              Row(
+                children: [
+                  InputRegister(
+                    icons: Icons.height,
+                    sizeIcon: 0.0,
+                    width: width*0.2,
+                    controller: _controllerStartHours,
+                    hint: '07:00',
+                    fonts: 14.0,
+                    keyboardType: TextInputType.number,
+                    colorBorder: PaletteColor.greyLight,
+                    background: PaletteColor.greyLight,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      HoraInputFormatter(),
                     ],
                   ),
-                  Column(
-                    children: [
-                      Container(
-                        width: 70,
-                        height: 70,
-                        margin: EdgeInsets.only(top: 16),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Color(0xffF15622),
-                                Color(0xffF8A78B),
-                              ],
-                            )
-                        ),
-                        child: Center(child: TextCustom(text: '4', size: 24.0, color: PaletteColor.white, fontWeight: FontWeight.w500,textAlign: TextAlign.center,)),
-                      ),
-                      TextCustom(text: 'Alimentos\nsalvos', size: 12.0, color: PaletteColor.primaryColor, fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                  TextCustom(text: 'ás',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                  InputRegister(
+                    icons: Icons.height,
+                    sizeIcon: 0.0,
+                    width: width*0.2,
+                    controller: _controllerFinishHours,
+                    hint: '18:00',
+                    fonts: 14.0,
+                    keyboardType: TextInputType.number,
+                    colorBorder: PaletteColor.greyLight,
+                    background: PaletteColor.greyLight,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      HoraInputFormatter(),
                     ],
                   ),
                 ],
@@ -112,7 +317,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 width: width,
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.all(8),
-                child: TextCustom(text: 'Alterar dados :', size: 16.0, color: PaletteColor.grey, fontWeight: FontWeight.normal,textAlign: TextAlign.center,)
+                child: TextCustom(text: 'Alterar dados :', size: 16.0, color: PaletteColor.grey, fontWeight: FontWeight.bold,textAlign: TextAlign.center,)
               ),
               Container(
                   width: width,
@@ -141,55 +346,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 8,vertical: 8),
                   child: TextCustom(text: 'Endereço', size: 14.0, color: PaletteColor.primaryColor, fontWeight: FontWeight.normal,textAlign: TextAlign.center,)
               ),
-              Container(
-                  width: width,
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  child:  Row(
-                    children: [
-                      TextCustomAddress(
-                        address: 'Rua Antonio Almeida, 55, Centro São Paulo/SP',
-                        type: 'Casa',
-                        width: width*0.7,
-                      ),
-                      Spacer(),
-                      Icon(Icons.delete,color: PaletteColor.primaryColor,)
-                    ],
-                  )
-              ),
-              SizedBox(height: 10),
-              Container(
-                  width: width,
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  child:  Row(
-                    children: [
-                      TextCustomAddress(
-                        address: 'Avenida Monteiro Lobato, 130, Parque Alagoas - São Paulo/SP',
-                        type: 'Trabalho',
-                        width: width*0.7,
-                      ),
-                      Spacer(),
-                      Icon(Icons.delete,color: PaletteColor.primaryColor,)
-                    ],
-                  )
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Container(
-                    alignment: Alignment.topCenter,
-                    width: width*0.6,
-                    padding: EdgeInsets.all(10),
-                    margin: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
-                    decoration: BoxDecoration(
-                        color: PaletteColor.greyLight,
-                        borderRadius: BorderRadius.circular(5)
-                    ),
-                    child: TextCustom(size: 14.0, fontWeight: FontWeight.normal, color: PaletteColor.grey, text: 'Adicionar novo endereço',textAlign: TextAlign.center,),
-                  ),
-                  Spacer()
-                ],
+              InputRegister(
+                icons: Icons.height,
+                sizeIcon: 0.0,
+                width: width*0.85,
+                controller: _controllerAddress,
+                hint: 'Rua, Avenida, etc',
+                fonts: 14.0,
+                keyboardType: TextInputType.text,
+                colorBorder: PaletteColor.greyLight,
+                background: PaletteColor.greyLight,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),

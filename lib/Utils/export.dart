@@ -32,6 +32,7 @@ export '../widgets/title_drawer.dart';
 export '../widgets/text_custom_address.dart';
 export '../widgets/container_requests_enterprise.dart';
 export '../widgets/container_finance.dart';
+export '../widgets/check_days.dart';
 
 export '../models/user_model.dart';
 export '../models/search_model.dart';

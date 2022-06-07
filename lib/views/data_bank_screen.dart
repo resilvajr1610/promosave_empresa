@@ -16,7 +16,6 @@ class _DataBankScreenState extends State<DataBankScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   BankModel _bankModel = BankModel();
   String _error="";
-  String name="";
 
   _verification(){
 
@@ -66,23 +65,6 @@ class _DataBankScreenState extends State<DataBankScreen> {
     => Navigator.pushReplacementNamed(context, "/splash"));
   }
 
-  _dataEnterprise()async{
-    DocumentSnapshot snapshot = await db.collection("enterprise")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
-
-    Map<String,dynamic>? data = snapshot.data() as Map<String, dynamic>?;
-    setState(() {
-      name = data?["name"];
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _dataEnterprise();
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -92,7 +74,10 @@ class _DataBankScreenState extends State<DataBankScreen> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: PaletteColor.white,
-      drawer: DrawerCustom(enterprise: name,photo: 'assets/image/logo.png',),
+      drawer: DrawerCustom(
+        enterprise: FirebaseAuth.instance.currentUser!.displayName!,
+        photo: FirebaseAuth.instance.currentUser!.photoURL,
+      ),
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: PaletteColor.primaryColor,
