@@ -1,3 +1,5 @@
+import 'package:promosave_empresa/models/product_model.dart';
+
 import '../Utils/export.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -10,15 +12,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   FirebaseStorage storage = FirebaseStorage.instance;
   FirebaseFirestore db = FirebaseFirestore.instance;
-  final _controllerPhone = TextEditingController();
-  final _controllerAddress = TextEditingController();
-  final _controllerStartHours = TextEditingController();
-  final _controllerFinishHours = TextEditingController();
+  var _controllerPhone = TextEditingController();
+  var _controllerAddress = TextEditingController();
+  var _controllerStartHours = TextEditingController();
+  var _controllerFinishHours = TextEditingController();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   String name="";
   String cnpj="";
   String email="";
+  String phone="";
+  String address="";
   String urlPhotoProfile="";
   String urlPhotoBanner="";
+  String startHours="";
+  String finishHours="";
   bool checkMonday=false;
   bool checkTuesday=false;
   bool checkWednesday=false;
@@ -38,8 +45,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
       name = data?["name"];
       cnpj = data?["cpf"];
       email = data?["email"];
+      phone = data?["phone"];
+      address = data?["address"];
       urlPhotoProfile = data?["urlPhotoProfile"];
       urlPhotoBanner = data?["urlPhotoBanner"];
+      startHours = data?["startHours"]??"";
+      finishHours = data?["finishHours"]??"";
+      checkMonday = data?["checkMonday"]??false;
+      checkTuesday = data?["checkTuesday"]??false;
+      checkWednesday = data?["checkWednesday"]??false;
+      checkThursday = data?["checkThursday"]??false;
+      checkFriday = data?["checkFriday"]??false;
+      checkSaturday = data?["checkSaturday"]??false;
+      checkSunday = data?["checkSunday"]??false;
+
+      _controllerPhone = TextEditingController(text:phone);
+      _controllerAddress = TextEditingController(text:address);
+      _controllerStartHours = TextEditingController(text: startHours);
+      _controllerFinishHours = TextEditingController(text: finishHours);
     });
   }
 
@@ -102,6 +125,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  _saveData(){
+    db.collection("enterprise").doc(FirebaseAuth.instance.currentUser!.uid).update({
+
+    "phone"           :phone,
+    "address"         :address,
+    "startHours"      :_controllerStartHours.text,
+    "finishHours"     :_controllerFinishHours.text,
+    "checkMonday"     :checkMonday,
+    "checkTuesday"    :checkTuesday,
+    "checkWednesday"  :checkWednesday,
+    "checkThursday"   :checkThursday,
+    "checkFriday"     :checkFriday,
+    "checkSaturday"   :checkSaturday,
+    "checkSunday"     :checkSunday,
+
+    }).then((_)
+    => Navigator.pushReplacementNamed(context, "/splash"));
+  }
+
+  _verification(){
+
+    if(_controllerStartHours.text.length==5){
+      if (_controllerFinishHours.text.length==5) {
+        if(_controllerPhone.text.length>10){
+          if(_controllerAddress.text.isNotEmpty){
+
+            _saveData();
+
+          }else{
+            setState(() {
+              showSnackBar(context, 'verifique seu endereço', _scaffoldKey);
+            });
+          }
+        }else{
+          setState(() {
+            showSnackBar(context, 'Verifique seu telefone',_scaffoldKey);
+          });
+        }
+      } else {
+        setState(() {
+          showSnackBar(context,  'Verifique o horário de fechamento do estabelecimento',_scaffoldKey);
+        });
+      }
+    }else{
+      setState(() {
+        showSnackBar(context, 'Verifique o horário de abertura do estabelecimento',_scaffoldKey);
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -115,6 +188,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      key: _scaffoldKey,
       drawer: DrawerCustom(
         enterprise: FirebaseAuth.instance.currentUser!.displayName!,
         photo: FirebaseAuth.instance.currentUser!.photoURL,
@@ -360,10 +434,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ButtonCustom(
-                  onPressed: (){},
+                  onPressed: ()=>_verification(),
                   heightCustom: 0.07,
                   widthCustom: 0.8,
-                  text: "Salvar",
+                  text: phone!=""?"Atualizar":"Salvar",
                   size: 14.0,
                   colorButton: PaletteColor.primaryColor,
                   colorText: PaletteColor.white,

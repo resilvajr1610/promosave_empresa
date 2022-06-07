@@ -9,10 +9,10 @@ class DataBankScreen extends StatefulWidget {
 class _DataBankScreenState extends State<DataBankScreen> {
 
   FirebaseFirestore db = FirebaseFirestore.instance;
-  final _controllerBank = TextEditingController();
-  final _controllerAgency = TextEditingController();
-  final _controllerAcount = TextEditingController();
-  final _controllerDigit = TextEditingController();
+  var _controllerBank = TextEditingController();
+  var _controllerAgency = TextEditingController();
+  var _controllerAcount = TextEditingController();
+  var _controllerDigit = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   BankModel _bankModel = BankModel();
   String _error="";
@@ -63,6 +63,29 @@ class _DataBankScreenState extends State<DataBankScreen> {
   _saveData(BankModel bankModel,final idUser){
     db.collection("enterprise").doc(idUser).update(_bankModel.toMap()).then((_)
     => Navigator.pushReplacementNamed(context, "/splash"));
+  }
+
+  _dataEnterprise()async{
+    DocumentSnapshot snapshot = await db.collection("enterprise")
+        .doc(FirebaseAuth.instance.currentUser!.uid).get();
+
+    Map<String,dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+    setState(() {
+      final bank   = data?["bank"];
+      final agency = data?["agency"];
+      final acount = data?["acount"];
+      final digit  = data?["digit"];
+      _controllerBank = TextEditingController(text: bank.toString());
+      _controllerAgency = TextEditingController(text: agency.toString());
+      _controllerAcount = TextEditingController(text: acount.toString());
+      _controllerDigit = TextEditingController(text: digit.toString());
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _dataEnterprise();
   }
 
   @override
@@ -187,7 +210,7 @@ class _DataBankScreenState extends State<DataBankScreen> {
                   widthCustom: 0.8,
                   heightCustom: 0.07,
                   onPressed: ()=>_verification(),
-                  text: "Salvar",
+                  text: "Atualizar",
                   size: 14,
                   colorButton: PaletteColor.primaryColor,
                   colorText: PaletteColor.white,
