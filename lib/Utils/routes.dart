@@ -13,17 +13,25 @@ class Routes{
           return MaterialPageRoute(
               builder: (_) => InitialScreen()
           );
-        case "/enterprise" :
+        case "/register" :
           return MaterialPageRoute(
-              builder: (_) => RegisterEnterpriseScreen()
+              builder: (_) => RegisterScreen(type: args as String,)
           );
         case "/login" :
           return MaterialPageRoute(
               builder: (_) => LoginScreen()
           );
+        case "/cnh" :
+          return MaterialPageRoute(
+              builder: (_) => CnhScreen()
+          );
         case "/home_enterprise" :
           return MaterialPageRoute(
               builder: (_) => HomeEnterpriseScreen()
+          );
+        case "/home_delivery" :
+          return MaterialPageRoute(
+              builder: (_) => HomeDeliveryScreen()
           );
         case "/requests_enterprise" :
           return MaterialPageRoute(

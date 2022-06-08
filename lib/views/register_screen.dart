@@ -1,13 +1,14 @@
 import '../Utils/export.dart';
 
-class RegisterEnterpriseScreen extends StatefulWidget {
-  const RegisterEnterpriseScreen({Key? key}) : super(key: key);
+class RegisterScreen extends StatefulWidget {
+  String  type;
+  RegisterScreen({required this.type});
 
   @override
   _LoginState createState() => _LoginState();
 }
 
-class _LoginState extends State<RegisterEnterpriseScreen>  with SingleTickerProviderStateMixin{
+class _LoginState extends State<RegisterScreen>  with SingleTickerProviderStateMixin{
 
   TextEditingController _controllerName = TextEditingController();
   TextEditingController _controllerPhone = TextEditingController();
@@ -25,15 +26,15 @@ class _LoginState extends State<RegisterEnterpriseScreen>  with SingleTickerProv
 
   _saveData(UserModel userModel){
     db.collection("enterprise").doc(userModel.idUser).set(_userModel.toMap()).then((_)
-    => Navigator.pushReplacementNamed(context, "/waiting"));
+    => Navigator.pushReplacementNamed(context,   widget.type=="enterprise"?"/waiting":'/cnh'));
   }
 
   _createUser()async{
 
     if(_controllerName.text.isNotEmpty){
       if (_controllerCNPJ.text.length>10) {
-        if(_controllerPhone.text.length>7){
-          if(_controllerAddress.text.isNotEmpty){
+        if( widget.type=="enterprise"? _controllerPhone.text.length>7:_controllerPhone.text.isEmpty){
+          if( widget.type=="enterprise"? _controllerAddress.text.isNotEmpty:_controllerAddress.text.isEmpty){
             if(_controllerPassword.text == _controllerPasswordConfirm.text && _controllerPassword.text.isNotEmpty){
               setState(() {
                 _error = "";
@@ -55,7 +56,7 @@ class _LoginState extends State<RegisterEnterpriseScreen>  with SingleTickerProv
                   _userModel.email=_controllerEmail.text;
                   _userModel.address=_controllerAddress.text;
                   _userModel.status=TextConst.WAITING;
-                  _userModel.type=TextConst.ENTERPRISE;
+                  _userModel.type= widget.type=="enterprise"? TextConst.ENTERPRISE : TextConst.DELIVERYMAN;
 
                   _saveData(_userModel);
                 });
@@ -108,13 +109,13 @@ class _LoginState extends State<RegisterEnterpriseScreen>  with SingleTickerProv
         }
       } else {
         setState(() {
-          _error = "Confira o CNPJ";
+          _error =  widget.type=="enterprise"?"Confira o CNPJ":"Confira o CPF";
           showSnackBar(context, _error,_scaffoldKey);
         });
       }
     }else{
       setState(() {
-        _error = "Confira o nome do estabelecimento";
+        _error =   widget.type=="enterprise"?"Confira o nome do estabelecimento":"Confira o seu nome";
         showSnackBar(context, _error,_scaffoldKey);
       });
     }
@@ -142,18 +143,19 @@ class _LoginState extends State<RegisterEnterpriseScreen>  with SingleTickerProv
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-                child: TextCustom(text: 'Olá, cadastre a sua empresa!',color: PaletteColor.grey,size: 16.0,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
+                child: TextCustom(text: widget.type=="enterprise"?'Olá, cadastre a sua empresa!':'Olá, seja um de nosso entregadores!',
+                  color: PaletteColor.grey,size: 16.0,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: TextCustom(text: 'Nome do estabelecimento',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                child: TextCustom(text:widget.type=="enterprise"? 'Nome do estabelecimento':'Nome',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
               ),
               InputRegister(
                 icons: Icons.height,
                 sizeIcon: 0.0,
                 width: width*0.8,
                 controller: _controllerName,
-                hint: 'Nome',
+                hint: widget.type=="enterprise"?'Nome':'Nome completo',
                 fonts: 14.0,
                 keyboardType: TextInputType.text,
                 colorBorder: PaletteColor.greyLight,
@@ -161,28 +163,28 @@ class _LoginState extends State<RegisterEnterpriseScreen>  with SingleTickerProv
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: TextCustom(text: 'CNPJ',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                child: TextCustom(text: widget.type=="enterprise"?'CNPJ':'CPF',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
               ),
               InputRegister(
                 icons: Icons.height,
                 sizeIcon: 0.0,
                 width: width*0.8,
                 controller: _controllerCNPJ,
-                hint: '00.000.000/0000-00',
+                hint: widget.type=="enterprise"?'00.000.000/0000-00':'000.000.000-00',
                 fonts: 14.0,
                 keyboardType: TextInputType.number,
                 colorBorder: PaletteColor.greyLight,
                 background: PaletteColor.greyLight,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
-                  CnpjInputFormatter()
+                  widget.type=="enterprise"?CnpjInputFormatter():CpfInputFormatter()
                 ],
               ),
-              Padding(
+              widget.type=="enterprise"?Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: TextCustom(text: 'Telefone',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
-              ),
-              InputRegister(
+              ):Container(width: width*0.8,),
+              widget.type=="enterprise"?InputRegister(
                 icons: Icons.height,
                 sizeIcon: 0.0,
                 width: width*0.8,
@@ -196,12 +198,12 @@ class _LoginState extends State<RegisterEnterpriseScreen>  with SingleTickerProv
                   FilteringTextInputFormatter.digitsOnly,
                   TelefoneInputFormatter()
                 ],
-              ),
-              Padding(
+              ):Container(width: width*0.8),
+              widget.type=="enterprise"?Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: TextCustom(text: 'Endereço',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
-              ),
-              InputRegister(
+              ):Container(width: width*0.8),
+              widget.type=="enterprise"?InputRegister(
                 icons: Icons.height,
                 sizeIcon: 0.0,
                 width: width*0.8,
@@ -211,7 +213,7 @@ class _LoginState extends State<RegisterEnterpriseScreen>  with SingleTickerProv
                 keyboardType: TextInputType.text,
                 colorBorder: PaletteColor.greyLight,
                 background: PaletteColor.greyLight,
-              ),
+              ):Container(width: width*0.8),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: TextCustom(text: 'E - mail',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
@@ -278,10 +280,10 @@ class _LoginState extends State<RegisterEnterpriseScreen>  with SingleTickerProv
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ButtonCustom(
-                  widthCustom: 0.75,
+                  widthCustom: 0.8,
                   heightCustom: 0.07,
                   onPressed: ()=>_createUser(),
-                  text: "Criar conta",
+                  text:   widget.type=="enterprise"?"Criar conta":"Próximo",
                   size: 14,
                   colorButton: PaletteColor.primaryColor,
                   colorText: PaletteColor.white,

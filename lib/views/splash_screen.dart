@@ -20,22 +20,36 @@ class _SplashScreenState extends State<SplashScreen> {
     final status = data?["status"];
     final type = data?["type"];
     final bank = data?["bank"];
+    final urlPhotoCnh = data?["urlPhotoCnh"];
+    final urlPhotoProfile = data?["urlPhotoProfile"];
 
     if(status==TextConst.APPROVED){
-      if(bank!=null){
-        if(type==TextConst.ENTERPRISE){
+      if(type==TextConst.ENTERPRISE){
+        if(bank!=null){
           await Future.delayed(Duration(seconds: 3),(){
             Navigator.pushReplacementNamed(context, '/home_enterprise');
           });
         }else{
           await Future.delayed(Duration(seconds: 3),(){
-            Navigator.pushReplacementNamed(context, '/home_delivery');
+            Navigator.pushReplacementNamed(context, '/registerBank');
           });
         }
       }else{
-        await Future.delayed(Duration(seconds: 3),(){
-          Navigator.pushReplacementNamed(context, '/registerBank');
-        });
+        if(urlPhotoCnh!=null && urlPhotoProfile!=null){
+          if(bank!=null){
+            await Future.delayed(Duration(seconds: 3),(){
+              Navigator.pushReplacementNamed(context, '/home_delivery');
+            });
+          }else{
+            await Future.delayed(Duration(seconds: 3),(){
+              Navigator.pushReplacementNamed(context, '/registerBank');
+            });
+          }
+        }else{
+          await Future.delayed(Duration(seconds: 3),(){
+            Navigator.pushReplacementNamed(context, '/cnh');
+          });
+        }
       }
     }else{
       await Future.delayed(Duration(seconds: 3),(){

@@ -17,6 +17,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var _controllerStartHours = TextEditingController();
   var _controllerFinishHours = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  String type="";
   String name="";
   String cnpj="";
   String email="";
@@ -42,13 +43,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     Map<String,dynamic>? data = snapshot.data() as Map<String, dynamic>?;
     setState(() {
+      type = data?["type"];
       name = data?["name"];
       cnpj = data?["cpf"];
       email = data?["email"];
       phone = data?["phone"];
       address = data?["address"];
       urlPhotoProfile = data?["urlPhotoProfile"];
-      urlPhotoBanner = data?["urlPhotoBanner"];
+      urlPhotoBanner = data?["urlPhotoBanner"]??"";
       startHours = data?["startHours"]??"";
       finishHours = data?["finishHours"]??"";
       checkMonday = data?["checkMonday"]??false;
@@ -146,8 +148,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   _verification(){
 
-    if(_controllerStartHours.text.length==5){
-      if (_controllerFinishHours.text.length==5) {
+    if(type==TextConst.ENTERPRISE? _controllerStartHours.text.length==5:_controllerStartHours.text.isEmpty){
+      if (type==TextConst.ENTERPRISE? _controllerFinishHours.text.length==5:_controllerFinishHours.text.isEmpty) {
         if(_controllerPhone.text.length>10){
           if(_controllerAddress.text.isNotEmpty){
 
@@ -207,7 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              urlPhotoProfile!=""? Padding(
+              urlPhotoProfile!="" ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child:GestureDetector(
                   onTap: ()=>_savePhoto('urlPhotoProfile'),
@@ -241,152 +243,156 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ):Container(),
               TextCustom(text: name.toUpperCase(), size: 14.0, color: PaletteColor.greyInput, fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
-              TextCustom(text: 'CNPJ $cnpj', size: 14.0, color: PaletteColor.greyInput, fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
+              type==TextConst.ENTERPRISE?TextCustom(text: 'CNPJ $cnpj', size: 14.0, color: PaletteColor.greyInput, fontWeight: FontWeight.bold,textAlign: TextAlign.center,):Container(),
               TextCustom(text: email, size: 14.0, color: PaletteColor.greyInput, fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
-              Container(
-                  width: width,
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.all(8),
-                  child: TextCustom(text: 'Foto banner', size: 16.0, color: PaletteColor.grey, fontWeight: FontWeight.bold,textAlign: TextAlign.center,)
-              ),
-              urlPhotoBanner!=""?GestureDetector(
-                onTap: ()=>_savePhoto('urlPhotoBanner'),
-                child: Container(
-                  margin: const EdgeInsets.all(4.0),
-                  height: 90,
-                  width: width,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: PaletteColor.greyInput,
-                      image: DecorationImage(
-                      image: NetworkImage(urlPhotoBanner), fit: BoxFit.cover),
-                  ),
-                ),
-              ): GestureDetector(
-                onTap: ()=>_savePhoto('urlPhotoBanner'),
-                child: Container(
-                  margin: const EdgeInsets.all(4.0),
-                  height: 90,
-                  width: width,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: PaletteColor.greyInput
-                  ),
-                  child: Icon(Icons.camera_alt,color: PaletteColor.white,size: 50,),
-                ),
-              ),
-              Container(
-                  width: width,
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.all(8),
-                  child: TextCustom(text: 'Horário de funcionamento:', size: 16.0, color: PaletteColor.grey, fontWeight: FontWeight.bold,textAlign: TextAlign.center,)
-              ),
-              Row(
+              type==TextConst.ENTERPRISE?Column(
                 children: [
-                  CheckDays(
-                    check: checkMonday,
-                    onChanged: (value){
-                      setState(() {
-                        checkMonday=value!;
-                      });
-                    }
+                  Container(
+                      width: width,
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.all(8),
+                      child: TextCustom(text: 'Foto banner', size: 16.0, color: PaletteColor.grey, fontWeight: FontWeight.bold,textAlign: TextAlign.center,)
                   ),
-                  TextCustom(text: 'Seg',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
-                  CheckDays(
-                      check: checkTuesday,
-                      onChanged: (value){
-                        setState(() {
-                          checkTuesday=value!;
-                        });
-                      }
+                  urlPhotoBanner!=""?GestureDetector(
+                    onTap: ()=>_savePhoto('urlPhotoBanner'),
+                    child: Container(
+                      margin: const EdgeInsets.all(4.0),
+                      height: 90,
+                      width: width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: PaletteColor.greyInput,
+                        image: DecorationImage(
+                            image: NetworkImage(urlPhotoBanner), fit: BoxFit.cover),
+                      ),
+                    ),
+                  ): GestureDetector(
+                    onTap: ()=>_savePhoto('urlPhotoBanner'),
+                    child: Container(
+                      margin: const EdgeInsets.all(4.0),
+                      height: 90,
+                      width: width,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: PaletteColor.greyInput
+                      ),
+                      child: Icon(Icons.camera_alt,color: PaletteColor.white,size: 50,),
+                    ),
                   ),
-                  TextCustom(text: 'Ter',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
-                  CheckDays(
-                      check: checkWednesday,
-                      onChanged: (value){
-                        setState(() {
-                          checkWednesday=value!;
-                        });
-                      }
+                  Container(
+                      width: width,
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.all(8),
+                      child: TextCustom(text: 'Horário de funcionamento:', size: 16.0, color: PaletteColor.grey, fontWeight: FontWeight.bold,textAlign: TextAlign.center,)
                   ),
-                  TextCustom(text: 'Qua',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
-                  CheckDays(
-                      check: checkThursday,
-                      onChanged: (value){
-                        setState(() {
-                          checkThursday=value!;
-                        });
-                      }
-                  ),
-                  TextCustom(text: 'Qui',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
-                ],
-              ),
-              Row(
-                children: [
-                  CheckDays(
-                      check: checkFriday,
-                      onChanged: (value){
-                        setState(() {
-                          checkFriday=value!;
-                        });
-                      }
-                  ),
-                  TextCustom(text: 'Sex',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
-                  CheckDays(
-                      check: checkSaturday,
-                      onChanged: (value){
-                        setState(() {
-                          checkSaturday=value!;
-                        });
-                      }
-                  ),
-                  TextCustom(text: 'Sáb',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
-                  CheckDays(
-                      check: checkSunday,
-                      onChanged: (value){
-                        setState(() {
-                          checkSunday=value!;
-                        });
-                      }
-                  ),
-                  TextCustom(text: 'Dom',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
-                ],
-              ),
-              Row(
-                children: [
-                  InputRegister(
-                    icons: Icons.height,
-                    sizeIcon: 0.0,
-                    width: width*0.2,
-                    controller: _controllerStartHours,
-                    hint: '07:00',
-                    fonts: 14.0,
-                    keyboardType: TextInputType.number,
-                    colorBorder: PaletteColor.greyLight,
-                    background: PaletteColor.greyLight,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      HoraInputFormatter(),
+                  Row(
+                    children: [
+                      CheckDays(
+                          check: checkMonday,
+                          onChanged: (value){
+                            setState(() {
+                              checkMonday=value!;
+                            });
+                          }
+                      ),
+                      TextCustom(text: 'Seg',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                      CheckDays(
+                          check: checkTuesday,
+                          onChanged: (value){
+                            setState(() {
+                              checkTuesday=value!;
+                            });
+                          }
+                      ),
+                      TextCustom(text: 'Ter',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                      CheckDays(
+                          check: checkWednesday,
+                          onChanged: (value){
+                            setState(() {
+                              checkWednesday=value!;
+                            });
+                          }
+                      ),
+                      TextCustom(text: 'Qua',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                      CheckDays(
+                          check: checkThursday,
+                          onChanged: (value){
+                            setState(() {
+                              checkThursday=value!;
+                            });
+                          }
+                      ),
+                      TextCustom(text: 'Qui',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
                     ],
                   ),
-                  TextCustom(text: 'ás',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
-                  InputRegister(
-                    icons: Icons.height,
-                    sizeIcon: 0.0,
-                    width: width*0.2,
-                    controller: _controllerFinishHours,
-                    hint: '18:00',
-                    fonts: 14.0,
-                    keyboardType: TextInputType.number,
-                    colorBorder: PaletteColor.greyLight,
-                    background: PaletteColor.greyLight,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      HoraInputFormatter(),
+                  Row(
+                    children: [
+                      CheckDays(
+                          check: checkFriday,
+                          onChanged: (value){
+                            setState(() {
+                              checkFriday=value!;
+                            });
+                          }
+                      ),
+                      TextCustom(text: 'Sex',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                      CheckDays(
+                          check: checkSaturday,
+                          onChanged: (value){
+                            setState(() {
+                              checkSaturday=value!;
+                            });
+                          }
+                      ),
+                      TextCustom(text: 'Sáb',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                      CheckDays(
+                          check: checkSunday,
+                          onChanged: (value){
+                            setState(() {
+                              checkSunday=value!;
+                            });
+                          }
+                      ),
+                      TextCustom(text: 'Dom',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      InputRegister(
+                        icons: Icons.height,
+                        sizeIcon: 0.0,
+                        width: width*0.2,
+                        controller: _controllerStartHours,
+                        hint: '07:00',
+                        fonts: 14.0,
+                        keyboardType: TextInputType.number,
+                        colorBorder: PaletteColor.greyLight,
+                        background: PaletteColor.greyLight,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          HoraInputFormatter(),
+                        ],
+                      ),
+                      TextCustom(text: 'ás',size: 14.0,color: PaletteColor.grey,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                      InputRegister(
+                        icons: Icons.height,
+                        sizeIcon: 0.0,
+                        width: width*0.2,
+                        controller: _controllerFinishHours,
+                        hint: '18:00',
+                        fonts: 14.0,
+                        keyboardType: TextInputType.number,
+                        colorBorder: PaletteColor.greyLight,
+                        background: PaletteColor.greyLight,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          HoraInputFormatter(),
+                        ],
+                      ),
                     ],
                   ),
                 ],
-              ),
+              ):Container(),
               Container(
                 width: width,
                 alignment: Alignment.centerLeft,

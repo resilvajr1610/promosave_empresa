@@ -3,7 +3,8 @@ export 'dart:async';
 export 'dart:io';
 
 export '../views/home_enterprise_screen.dart';
-export '../views/register_enterprise_screen.dart';
+export '../views/home_delivery_screen.dart';
+export '../views/register_screen.dart';
 export '../views/splash_screen.dart';
 export '../views/initial_screen.dart';
 export '../views/login_screen.dart';
@@ -18,6 +19,7 @@ export '../views/requests_enterprise_screen.dart';
 export '../views/who_we_are_screen.dart';
 export '../views/finance_screen.dart';
 export '../views/history_requests_enterprise_screen.dart';
+export '../views/cnh_screen.dart';
 
 export '../widgets/buttom_custom.dart';
 export '../widgets/inputRegister.dart';
@@ -33,6 +35,8 @@ export '../widgets/text_custom_address.dart';
 export '../widgets/container_requests_enterprise.dart';
 export '../widgets/container_finance.dart';
 export '../widgets/check_days.dart';
+export '../widgets/container_delivery.dart';
+export '../widgets/show_dialog.dart';
 
 export '../models/user_model.dart';
 export '../models/search_model.dart';

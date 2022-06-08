@@ -46,7 +46,7 @@ class _DefinitionScreenState extends State<DefinitionScreen> {
                 child: ButtonCustom(
                   widthCustom: 0.75,
                   heightCustom: 0.07,
-                  onPressed: ()=>Navigator.pushNamed(context, '/enterprise'),
+                  onPressed: ()=>Navigator.pushNamed(context, '/register',arguments:'enterprise'),
                   text: "Sou uma loja",
                   size: 14,
                   colorButton: PaletteColor.primaryColor,
@@ -59,7 +59,7 @@ class _DefinitionScreenState extends State<DefinitionScreen> {
                 child: ButtonCustom(
                   widthCustom: 0.75,
                   heightCustom: 0.07,
-                  onPressed: (){},
+                  onPressed: ()=>Navigator.pushNamed(context, '/register',arguments: 'delivery'),
                   text: "Sou um entregador",
                   size: 14,
                   colorButton: PaletteColor.primaryColor,

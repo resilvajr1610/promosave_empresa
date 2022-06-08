@@ -118,7 +118,7 @@ class _DataBankScreenState extends State<DataBankScreen> {
               Container(
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-                child: TextCustom(text: 'Falta pouco, vamos cadastrar seus dados bancários!',color: PaletteColor.grey,size: 16.0,fontWeight: FontWeight.bold,textAlign: TextAlign.start,),
+                child: TextCustom(text: 'Alterar dados bancários!',color: PaletteColor.grey,size: 16.0,fontWeight: FontWeight.bold,textAlign: TextAlign.start,),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),

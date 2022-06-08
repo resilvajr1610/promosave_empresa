@@ -6,8 +6,23 @@ class DrawerCustom extends StatelessWidget {
 
   DrawerCustom({required this.enterprise, required this.photo});
 
+  var type="";
+
+  data() async {
+    var snapshot = await  FirebaseFirestore.instance.collection('enterprise').doc(FirebaseAuth.instance.currentUser!.uid).get();
+    Map<String,dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+    type = data?["type"];
+  }
+
+  test(){
+    print(type);
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    data();
+    test();
 
     double width= MediaQuery.of(context).size.width;
     double height= MediaQuery.of(context).size.height;
@@ -39,7 +54,7 @@ class DrawerCustom extends StatelessWidget {
             ),
             SizedBox(height: height*0.02),
             TitleDrawer(
-              onTap: ()=>Navigator.pushNamed(context, '/home_enterprise'),
+              onTap: ()=>Navigator.pushNamed(context, type ==TextConst.ENTERPRISE?'/home_enterprise':'/home_delivery'),
               title: 'home',
               icon: Icons.home_outlined,
             ),
@@ -60,7 +75,7 @@ class DrawerCustom extends StatelessWidget {
             ),
             TitleDrawer(
               onTap: ()=>Navigator.pushNamed(context, '/history_requests'),
-              title: 'Histórico de pedidos',
+              title: type ==TextConst.ENTERPRISE?'Histórico de pedidos':'Histórico de entregas',
               icon: Icons.calendar_today_outlined,
             ),
             TitleDrawer(
