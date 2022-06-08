@@ -37,6 +37,10 @@ class Routes{
           return MaterialPageRoute(
               builder: (_) => RequestsEnterpriseScreen()
           );
+        case "/questions" :
+          return MaterialPageRoute(
+              builder: (_) => QuestionsScreen()
+          );
         case "/profile" :
           return MaterialPageRoute(
               builder: (_) => ProfileScreen()

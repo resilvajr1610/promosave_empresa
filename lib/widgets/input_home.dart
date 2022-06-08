@@ -22,7 +22,7 @@ class InputHome extends StatelessWidget {
             color: Colors.black26, //                   <--- border color
             width: 1.0,
           ),
-          borderRadius: BorderRadius.circular(10)
+          borderRadius: BorderRadius.circular(5)
       ),
       child:widget,
     );

@@ -79,9 +79,9 @@ class DrawerCustom extends StatelessWidget {
               icon: Icons.calendar_today_outlined,
             ),
             TitleDrawer(
-                onTap: (){},
-                title: 'Perguntas frequentes',
-                icon: Icons.help_outline,
+              onTap: ()=>Navigator.pushNamed(context, '/questions'),
+              title: 'Perguntas frequentes',
+              icon: Icons.help_outline,
             ),
             TitleDrawer(
               onTap: ()=>Navigator.pushNamed(context, '/who'),

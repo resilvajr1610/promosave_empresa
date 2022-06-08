@@ -20,6 +20,7 @@ export '../views/who_we_are_screen.dart';
 export '../views/finance_screen.dart';
 export '../views/history_requests_enterprise_screen.dart';
 export '../views/cnh_screen.dart';
+export '../views/questions_screen.dart';
 
 export '../widgets/buttom_custom.dart';
 export '../widgets/inputRegister.dart';
@@ -37,6 +38,7 @@ export '../widgets/container_finance.dart';
 export '../widgets/check_days.dart';
 export '../widgets/container_delivery.dart';
 export '../widgets/show_dialog.dart';
+export '../widgets/container_question.dart';
 
 export '../models/user_model.dart';
 export '../models/search_model.dart';
