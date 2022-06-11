@@ -1,4 +1,4 @@
-import '../utils/export.dart';
+import '../Utils/export.dart';
 
 class TextCustom extends StatelessWidget {
 
@@ -7,14 +7,17 @@ class TextCustom extends StatelessWidget {
   final color;
   final fontWeight;
   final textAlign;
+  int? maxLines=2;
 
-  TextCustom({required this.text, required this.size,required this.color,required this.fontWeight, required this.textAlign});
+  TextCustom({required this.text, required this.size,required this.color,required this.fontWeight, required this.textAlign,this.maxLines});
 
   @override
   Widget build(BuildContext context) {
-    return Text(text,
+    return AutoSizeText(text,
         textAlign: textAlign,
-        style: TextStyle(fontFamily: 'Nunito',color: color,fontSize: size,fontWeight: fontWeight,)
+        style: TextStyle(fontFamily: 'Nunito',color: color,fontSize: size,fontWeight: fontWeight,),
+        minFontSize: 10,
+        maxLines: maxLines,
     );
   }
 }

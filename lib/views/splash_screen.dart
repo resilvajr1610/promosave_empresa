@@ -34,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Navigator.pushReplacementNamed(context, '/registerBank');
           });
         }
-      }else{
+      }else if (type==TextConst.DELIVERYMAN){
         if(urlPhotoCnh!=null && urlPhotoProfile!=null){
           if(bank!=null){
             await Future.delayed(Duration(seconds: 3),(){
@@ -50,10 +50,18 @@ class _SplashScreenState extends State<SplashScreen> {
             Navigator.pushReplacementNamed(context, '/cnh');
           });
         }
+      }else{
+        await Future.delayed(Duration(seconds: 3),(){
+          Navigator.pushReplacementNamed(context, '/login');
+        });
       }
-    }else{
+    }else if (type==TextConst.WAITING){
       await Future.delayed(Duration(seconds: 3),(){
         Navigator.pushReplacementNamed(context, '/waiting');
+      });
+    }else{
+      await Future.delayed(Duration(seconds: 3),(){
+        Navigator.pushReplacementNamed(context, '/initial');
       });
     }
   }

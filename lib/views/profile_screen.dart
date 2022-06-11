@@ -1,3 +1,4 @@
+import 'package:google_place/google_place.dart';
 import 'package:promosave_empresa/models/product_model.dart';
 
 import '../Utils/export.dart';
@@ -36,6 +37,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool checkSunday=false;
   File? picture;
   bool _sending = false;
+  String city="";
+  String village="";
+  String street="";
+  late GooglePlace googlePlace;
+  List<AutocompletePrediction> predictions=[];
+  String apikey='AIzaSyBrOfzJKgCwsbPxmc9cSQ6DptcQvluZQFQ';
+  var result;
+  Timer? _debounce;
+  DetailsResult? startPosition;
+  late FocusNode? startFocusNode;
+  double lat = 0.0;
+  double lng = 0.0;
+
+  void autoCompleteSearch(String value)async{
+    result = await googlePlace.autocomplete.get(value);
+    if(result!= null && result.predictions !=null && mounted){
+      //print(result.predictions!.first.description);
+      setState(() {
+        predictions = result.predictions!;
+      });
+    }
+  }
 
   _dataEnterprise()async{
     DocumentSnapshot snapshot = await db.collection("enterprise")
@@ -130,8 +153,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   _saveData(){
     db.collection("enterprise").doc(FirebaseAuth.instance.currentUser!.uid).update({
 
-    "phone"           :phone,
-    "address"         :address,
+    "phone"           :_controllerPhone.text,
+    "address"         :_controllerAddress.text,
+    "street"          :street,
+    "village"         :village,
+    "city"            :city,
+    "lat"             :lat,
+    "lng"             :lng,
     "startHours"      :_controllerStartHours.text,
     "finishHours"     :_controllerFinishHours.text,
     "checkMonday"     :checkMonday,
@@ -181,6 +209,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _dataEnterprise();
+    googlePlace = GooglePlace(apikey);
+    startFocusNode=FocusNode();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    startFocusNode?.dispose();
   }
 
   @override
@@ -426,23 +462,78 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 8,vertical: 8),
                   child: TextCustom(text: 'Endereço', size: 14.0, color: PaletteColor.primaryColor, fontWeight: FontWeight.normal,textAlign: TextAlign.center,)
               ),
-              InputRegister(
-                icons: Icons.height,
-                sizeIcon: 0.0,
-                width: width*0.85,
-                controller: _controllerAddress,
-                hint: 'Rua, Avenida, etc',
-                fonts: 14.0,
-                keyboardType: TextInputType.text,
-                colorBorder: PaletteColor.greyLight,
-                background: PaletteColor.greyLight,
+              Container(
+                alignment: Alignment.topCenter,
+                width: width*0.9,
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                margin: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+                decoration: BoxDecoration(
+                    color: PaletteColor.greyLight,
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: PaletteColor.greyLight,)
+                ),
+                child: TextFormField(
+                  controller: _controllerAddress,
+                  focusNode: startFocusNode,
+                  textAlign: TextAlign.start,
+                  keyboardType: TextInputType.text,
+                  textAlignVertical: TextAlignVertical.center,
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 14.0,
+                  ),
+                  onChanged:(value){
+                    if(value.isNotEmpty){
+                      autoCompleteSearch(value);
+                    }
+                  },
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Rua, Avenida, etc',
+                    hintStyle: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 14.0,
+                    ),
+                  ),
+                ),
               ),
+              ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: predictions.length,
+                  itemBuilder: (context, index){
+                    return ListTile(
+                      leading: Icon(Icons.location_on,color: PaletteColor.primaryColor,),
+                      title: Text(predictions[index].description.toString()),
+                      onTap: ()async{
+                        final placeId = predictions[index].placeId;
+                        final details = await googlePlace.details.get(placeId!);
+                        if(details!=null && details.result !=null && mounted){
+                          setState(() {
+                            startPosition = details.result;
+                            _controllerAddress.text = details.result!.name!;
+                            lat = startPosition!.geometry!.location!.lat!;
+                            lng = startPosition!.geometry!.location!.lng!;
+                            final completeAddress = startPosition!.adrAddress!;
+                            final splittedStart = completeAddress.split('>');
+                            street = splittedStart[1].replaceAll('</span', '');
+                            village = splittedStart[3].replaceAll('</span', '');
+                            city = splittedStart[5].replaceAll('</span', '');
+
+                            print("Street :     " + street.toString());
+                            print("village :  " + village);
+                            print("city :    " + city);
+                            predictions=[];
+                          });
+                        }
+                      },
+                    );
+              }),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ButtonCustom(
                   onPressed: ()=>_verification(),
                   heightCustom: 0.07,
-                  widthCustom: 0.8,
+                  widthCustom: 0.9,
                   text: phone!=""?"Atualizar":"Salvar",
                   size: 14.0,
                   colorButton: PaletteColor.primaryColor,

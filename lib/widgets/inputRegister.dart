@@ -26,7 +26,7 @@ class InputRegister extends StatelessWidget {
     required this.icons,
     required this.colorBorder,
     required this.background,
-});
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class InputRegister extends StatelessWidget {
                   hintStyle: TextStyle(
                     color: Colors.black54,
                     fontSize: this.fonts,
-                  )
+                  ),
               ),
             ),
           ),

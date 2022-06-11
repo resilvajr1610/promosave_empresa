@@ -1,3 +1,4 @@
+import 'package:google_place/google_place.dart';
 import '../Utils/export.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -21,8 +22,31 @@ class _LoginState extends State<RegisterScreen>  with SingleTickerProviderStateM
   FirebaseFirestore db = FirebaseFirestore.instance;
   UserModel _userModel = UserModel();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  double lat = 0.0;
+  double lng = 0.0;
   bool visibiblePassword = false;
   String _error="";
+  var result;
+  String city="";
+  String village="";
+  String street="";
+
+  late GooglePlace googlePlace;
+  List<AutocompletePrediction> predictions=[];
+  String apikey='AIzaSyBrOfzJKgCwsbPxmc9cSQ6DptcQvluZQFQ';
+  Timer? _debounce;
+  DetailsResult? startPosition;
+  late FocusNode? startFocusNode;
+
+  void autoCompleteSearch(String value)async{
+    result = await googlePlace.autocomplete.get(value);
+    if(result!= null && result.predictions !=null && mounted){
+      //print(result.predictions!.first.description);
+      setState(() {
+        predictions = result.predictions!;
+      });
+    }
+  }
 
   _saveData(UserModel userModel){
     db.collection("enterprise").doc(userModel.idUser).set(_userModel.toMap()).then((_)
@@ -55,6 +79,11 @@ class _LoginState extends State<RegisterScreen>  with SingleTickerProviderStateM
                   _userModel.cpf=_controllerCNPJ.text;
                   _userModel.email=_controllerEmail.text;
                   _userModel.address=_controllerAddress.text;
+                  _userModel.street=street;
+                  _userModel.village=village;
+                  _userModel.city=city;
+                  _userModel.lat=lat;
+                  _userModel.lng=lng;
                   _userModel.status=TextConst.WAITING;
                   _userModel.type= widget.type=="enterprise"? TextConst.ENTERPRISE : TextConst.DELIVERYMAN;
 
@@ -119,6 +148,19 @@ class _LoginState extends State<RegisterScreen>  with SingleTickerProviderStateM
         showSnackBar(context, _error,_scaffoldKey);
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    googlePlace = GooglePlace(apikey);
+    startFocusNode=FocusNode();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    startFocusNode?.dispose();
   }
 
   @override
@@ -203,17 +245,72 @@ class _LoginState extends State<RegisterScreen>  with SingleTickerProviderStateM
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: TextCustom(text: 'Endereço',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
               ):Container(width: width*0.8),
-              widget.type=="enterprise"?InputRegister(
-                icons: Icons.height,
-                sizeIcon: 0.0,
+              widget.type=="enterprise"?Container(
+                alignment: Alignment.topCenter,
                 width: width*0.8,
-                controller: _controllerAddress,
-                hint: 'Rua, Avenida, etc',
-                fonts: 14.0,
-                keyboardType: TextInputType.text,
-                colorBorder: PaletteColor.greyLight,
-                background: PaletteColor.greyLight,
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                margin: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+                decoration: BoxDecoration(
+                    color: PaletteColor.greyLight,
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: PaletteColor.greyLight,)
+                ),
+                child: TextFormField(
+                  controller: _controllerAddress,
+                  focusNode: startFocusNode,
+                  textAlign: TextAlign.start,
+                  keyboardType: TextInputType.text,
+                  textAlignVertical: TextAlignVertical.center,
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 14.0,
+                  ),
+                  onChanged:(value){
+                    if(value.isNotEmpty){
+                      autoCompleteSearch(value);
+                    }
+                  },
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Rua, Avenida, etc',
+                    hintStyle: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 14.0,
+                    ),
+                  ),
+                ),
               ):Container(width: width*0.8),
+              ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: predictions.length,
+                  itemBuilder: (context, index){
+                    return ListTile(
+                      leading: Icon(Icons.location_on,color: PaletteColor.primaryColor,),
+                      title: Text(predictions[index].description.toString()),
+                      onTap: ()async{
+                        final placeId = predictions[index].placeId;
+                        final details = await googlePlace.details.get(placeId!);
+                        if(details!=null && details.result !=null && mounted){
+                          setState(() {
+                            startPosition = details.result;
+                            _controllerAddress.text = details.result!.name!;
+                            lat = startPosition!.geometry!.location!.lat!;
+                            lng = startPosition!.geometry!.location!.lng!;
+                            final completeAddress = startPosition!.adrAddress!;
+                            final splittedStart = completeAddress.split('>');
+                            street = splittedStart[1].replaceAll('</span', '');
+                            village = splittedStart[3].replaceAll('</span', '');
+                            city = splittedStart[5].replaceAll('</span', '');
+
+                            print("Street :     " + street.toString());
+                            print("village :  " + village);
+                            print("city :    " + city);
+                            predictions=[];
+                          });
+                        }
+                      },
+                    );
+                  }),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: TextCustom(text: 'E - mail',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),

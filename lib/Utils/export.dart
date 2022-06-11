@@ -58,3 +58,4 @@ export 'package:font_awesome_flutter/font_awesome_flutter.dart';
 export 'package:cloud_firestore/cloud_firestore.dart';
 export 'package:image_picker/image_picker.dart';
 export 'package:firebase_storage/firebase_storage.dart';
+export 'package:auto_size_text/auto_size_text.dart';

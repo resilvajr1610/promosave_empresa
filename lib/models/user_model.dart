@@ -8,6 +8,11 @@ class UserModel{
   String address="";
   String status="";
   String type="";
+  double lat=0.0;
+  double lng=0.0;
+  String city="";
+  String street="";
+  String village="";
 
   Map<String,dynamic> toMap(){
     Map<String,dynamic> map = {
@@ -18,6 +23,11 @@ class UserModel{
       "phone"   : this.phone,
       "address" : this.address,
       "status"  : this.status,
+      "lat"     : this.lat,
+      "lng"     : this.lng,
+      "city"    : this.city,
+      "street"  : this.street,
+      "village" : this.village,
       "type"    : this.type,
     };
     return map;
