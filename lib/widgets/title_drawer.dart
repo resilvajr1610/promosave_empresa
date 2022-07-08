@@ -10,10 +10,14 @@ class TitleDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    double width = MediaQuery.of(context).size.width;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 250,
+        color: Colors.white,
+        width: width,
         padding: const EdgeInsets.symmetric(vertical: 3.0,horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
