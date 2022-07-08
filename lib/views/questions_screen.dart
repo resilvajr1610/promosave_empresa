@@ -1,3 +1,5 @@
+import 'package:promosave_empresa/Utils/text_const.dart';
+
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
 
@@ -21,7 +23,12 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
 
     Map<String,dynamic>? data = snapshot.data() as Map<String, dynamic>?;
     setState(() {
-      String type = data?["type"];
+      String type = data?["type"]??'';
+
+      if(type == TextConst.DELIVERYMAN){
+        type = 'delivery';
+      }
+
       dataFirebase(type.toLowerCase());
     });
   }
@@ -60,6 +67,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   @override
   void initState() {
     super.initState();
+    print(FirebaseAuth.instance.currentUser!.uid);
     _controllerSearch.addListener(_search);
     userFirebase();
   }
@@ -72,7 +80,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     return Scaffold(
       backgroundColor: PaletteColor.white,
       drawer: DrawerCustom(
-        enterprise: FirebaseAuth.instance.currentUser!.displayName!,
+        enterprise: FirebaseAuth.instance.currentUser!.displayName!=null?FirebaseAuth.instance.currentUser!.displayName!:'',
         photo: FirebaseAuth.instance.currentUser!.photoURL,
       ),
       appBar: AppBar(

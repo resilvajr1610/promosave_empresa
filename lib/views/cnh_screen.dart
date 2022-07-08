@@ -188,7 +188,7 @@ class _CnhScreenState extends State<CnhScreen> {
             child: ButtonCustom(
                 onPressed: (){
                   if(_urlPhotoCnh!="" && _urlPhotoProfile!=""){
-                      Navigator.pushReplacementNamed(context, '/home_delivery');
+                      Navigator.pushReplacementNamed(context, '/splash');
                   }else{
                     showSnackBar(context, "Registre as duas fotos para serem avaliadas posteriormente", _scaffoldKey);
                   }

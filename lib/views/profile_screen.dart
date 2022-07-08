@@ -228,7 +228,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       key: _scaffoldKey,
       drawer: DrawerCustom(
-        enterprise: FirebaseAuth.instance.currentUser!.displayName!,
+        enterprise: FirebaseAuth.instance.currentUser!.displayName!=null?FirebaseAuth.instance.currentUser!.displayName!:'',
         photo: FirebaseAuth.instance.currentUser!.photoURL,
       ),
       backgroundColor: PaletteColor.white,

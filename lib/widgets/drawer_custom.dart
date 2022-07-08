@@ -105,8 +105,7 @@ class DrawerCustom extends StatelessWidget {
             Spacer(),
             GestureDetector(
               onTap: () {
-                FirebaseAuth.instance.signOut();
-                Navigator.pushReplacementNamed(context, '/login');
+                FirebaseAuth.instance.signOut().then((value) => Navigator.pushReplacementNamed(context, '/initial'));
               },
               child: Container(
                   padding: EdgeInsets.all(8),

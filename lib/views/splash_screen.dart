@@ -57,13 +57,9 @@ class _SplashScreenState extends State<SplashScreen> {
           Navigator.pushReplacementNamed(context, '/login');
         });
       }
-    }else if (type==TextConst.WAITING){
-      await Future.delayed(Duration(seconds: 3),(){
-        Navigator.pushReplacementNamed(context, '/waiting');
-      });
     }else{
       await Future.delayed(Duration(seconds: 3),(){
-        Navigator.pushReplacementNamed(context, '/initial');
+        Navigator.pushReplacementNamed(context, '/waiting');
       });
     }
   }
