@@ -1,3 +1,4 @@
+import '../Utils/colors.dart';
 import '../Utils/export.dart';
 
 class WaitingScreen extends StatefulWidget {

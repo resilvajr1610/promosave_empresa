@@ -1,4 +1,6 @@
+import '../Utils/colors.dart';
 import '../Utils/export.dart';
+import '../Utils/text_const.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);

@@ -41,12 +41,11 @@ export '../widgets/show_dialog.dart';
 export '../widgets/container_question.dart';
 
 export '../models/user_model.dart';
-export '../models/search_model.dart';
 export '../models/bank_model.dart';
-
-export 'colors.dart';
-export 'routes.dart';
-export 'text_const.dart';
+export '../models/error_list_model.dart';
+export '../models/question_model.dart';
+export '../models/product_model.dart';
+export '../models/search_question_model.dart';
 
 export 'dart:convert';
 export 'package:firebase_auth/firebase_auth.dart';

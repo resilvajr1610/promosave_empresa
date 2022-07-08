@@ -1,3 +1,4 @@
+import '../Utils/colors.dart';
 import '../Utils/export.dart';
 
 class QuestionsScreen extends StatefulWidget {
@@ -8,8 +9,60 @@ class QuestionsScreen extends StatefulWidget {
 }
 
 class _QuestionsScreenState extends State<QuestionsScreen> {
+  FirebaseFirestore db = FirebaseFirestore.instance;
   final _controllerSearch = TextEditingController();
-  bool showAnswer=false;
+  List _allResults = [];
+  List _resultsList = [];
+  List<QuestionModel> listQuestionModel=[];
+
+  userFirebase()async{
+    DocumentSnapshot snapshot = await db.collection("enterprise")
+        .doc(FirebaseAuth.instance.currentUser!.uid).get();
+
+    Map<String,dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+    setState(() {
+      String type = data?["type"];
+      dataFirebase(type.toLowerCase());
+    });
+  }
+
+  dataFirebase(String type)async{
+    var data = await db.collection("questions").where('type', isEqualTo: type).get();
+    setState(() {
+      _allResults = data.docs;
+    });
+    resultSearchList();
+    return "complete";
+  }
+
+  _search() {
+    resultSearchList();
+  }
+  resultSearchList() {
+    var showResults = [];
+
+    if (_controllerSearch.text != "") {
+      for (var items in _allResults) {
+        var brands = SearchQuestionModel.fromSnapshot(items).question.toLowerCase();
+
+        if (brands.contains(_controllerSearch.text.toLowerCase())) {
+          showResults.add(items);
+        }
+      }
+    } else {
+      showResults = List.from(_allResults);
+    }
+    setState(() {
+      _resultsList = showResults;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controllerSearch.addListener(_search);
+    userFirebase();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +84,27 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           color: PaletteColor.white,
           fontWeight: FontWeight.bold,
           textAlign: TextAlign.center,
+        ),
+      ),
+      bottomSheet: Container(
+        color: PaletteColor.white,
+        padding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(FontAwesomeIcons.whatsapp,color: PaletteColor.green,size: 40,),
+            SizedBox(width:10),
+            Container(
+              width: width*0.75,
+              child: TextCustom(
+                  text: 'Dúvidas? Entre em contato pelo nosso WhatsApp',
+                  size: 16.0,
+                  color: PaletteColor.grey,
+                  fontWeight: FontWeight.normal,
+                  textAlign: TextAlign.start
+              ),
+            )
+          ],
         ),
       ),
       body: Center(
@@ -74,58 +148,39 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
               )),
               SizedBox(height: 20),
               Container(
-                height: height*0.67,
-                child: ListView(
-                  children: [
-                    ContainerQuestion(
-                      showAnswer: showAnswer,
-                      question: 'Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint?',
-                      answer: 'Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.',
-                      onTap: (){
-                        setState(() {
-                          if(showAnswer==false){
-                            showAnswer=true;
-                            print(showAnswer);
-                          }else{
-                            showAnswer=false;
-                            print(showAnswer);
-                          }
-                        });
-                      },
-                    ),
-                    ContainerQuestion(
-                      showAnswer: showAnswer,
-                      question: 'Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint?',
-                      answer: 'Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.',
-                      onTap: (){
-                        setState(() {
-                          if(showAnswer==false){
-                            showAnswer=true;
-                            print(showAnswer);
-                          }else{
-                            showAnswer=false;
-                            print(showAnswer);
-                          }
-                        });
-                      },
-                    ),
-                    ContainerQuestion(
-                      showAnswer: showAnswer,
-                      question: 'Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint?',
-                      answer: 'Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.',
-                      onTap: (){
-                        setState(() {
-                          if(showAnswer==false){
-                            showAnswer=true;
-                            print(showAnswer);
-                          }else{
-                            showAnswer=false;
-                            print(showAnswer);
-                          }
-                        });
-                      },
-                    )
-                  ],
+                height: height*0.6,
+                child: ListView.builder(
+                  itemCount: _resultsList.length,
+                  itemBuilder:(context,index) {
+
+                    DocumentSnapshot item = _resultsList[index];
+
+                    if(_resultsList.length == 0){
+                      return Center(
+                          child: Text('Nenhuma pergunta encontrada dessa categoria',
+                            style: TextStyle(fontSize: 16,color: PaletteColor.primaryColor),)
+                      );
+                    }else{
+                      listQuestionModel.add(
+                          QuestionModel(
+                              answer: item['answer'],
+                              question: item['question'],
+                              showQuestion: false
+                          )
+                      );
+
+                      return ContainerQuestion(
+                        showAnswer: listQuestionModel[index].showQuestion,
+                        question:  listQuestionModel[index].question,
+                        answer: listQuestionModel[index].answer,
+                        onTap: () {
+                          setState(() {
+                            listQuestionModel[index].showQuestion?listQuestionModel[index].showQuestion=false:listQuestionModel[index].showQuestion=true;
+                          });
+                        },
+                      );
+                    }
+                  },
                 ),
               ),
             ],

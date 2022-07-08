@@ -1,5 +1,4 @@
-import 'package:promosave_empresa/models/product_model.dart';
-
+import '../Utils/colors.dart';
 import '../Utils/export.dart';
 
 class ShowDialog extends StatelessWidget {

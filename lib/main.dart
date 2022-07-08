@@ -1,4 +1,5 @@
-import '../Utils/export.dart';
+import 'Utils/export.dart';
+import 'Utils/routes.dart';
 
 void main()async{
 
@@ -9,7 +10,7 @@ void main()async{
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: SplashScreen(),
+    //home: SplashScreen(),
     initialRoute:route,
     onGenerateRoute: Routes.generateRoute,
   ));

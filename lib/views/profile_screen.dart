@@ -1,7 +1,8 @@
 import 'package:google_place/google_place.dart';
-import 'package:promosave_empresa/models/product_model.dart';
 
+import '../Utils/colors.dart';
 import '../Utils/export.dart';
+import '../Utils/text_const.dart';
 
 class ProfileScreen extends StatefulWidget {
 
@@ -53,7 +54,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void autoCompleteSearch(String value)async{
     result = await googlePlace.autocomplete.get(value);
     if(result!= null && result.predictions !=null && mounted){
-      //print(result.predictions!.first.description);
       setState(() {
         predictions = result.predictions!;
       });
@@ -72,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       email = data?["email"];
       phone = data?["phone"];
       address = data?["address"];
-      urlPhotoProfile = data?["urlPhotoProfile"];
+      urlPhotoProfile = data?["urlPhotoProfile"]??'';
       urlPhotoBanner = data?["urlPhotoBanner"]??"";
       startHours = data?["startHours"]??"";
       finishHours = data?["finishHours"]??"";

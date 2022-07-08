@@ -1,5 +1,7 @@
 import 'package:google_place/google_place.dart';
+import '../Utils/colors.dart';
 import '../Utils/export.dart';
+import '../Utils/text_const.dart';
 
 class RegisterScreen extends StatefulWidget {
   String  type;

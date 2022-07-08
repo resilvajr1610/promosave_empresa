@@ -1,5 +1,5 @@
+import '../Utils/colors.dart';
 import '../Utils/export.dart';
-import '../models/product_model.dart';
 
 class AddProductScreen extends StatefulWidget {
   final text;
