@@ -1,8 +1,7 @@
 import 'package:google_place/google_place.dart';
-
 import '../Utils/colors.dart';
-import '../Utils/export.dart';
 import '../Utils/text_const.dart';
+import '../utils/export.dart';
 
 class ProfileScreen extends StatefulWidget {
 
@@ -152,26 +151,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   _saveData(){
     db.collection("enterprise").doc(FirebaseAuth.instance.currentUser!.uid).update({
-
-    "phone"           :_controllerPhone.text,
-    "address"         :_controllerAddress.text,
-    "street"          :street,
-    "village"         :village,
-    "city"            :city,
-    "lat"             :lat,
-    "lng"             :lng,
-    "startHours"      :_controllerStartHours.text,
-    "finishHours"     :_controllerFinishHours.text,
-    "checkMonday"     :checkMonday,
-    "checkTuesday"    :checkTuesday,
-    "checkWednesday"  :checkWednesday,
-    "checkThursday"   :checkThursday,
-    "checkFriday"     :checkFriday,
-    "checkSaturday"   :checkSaturday,
-    "checkSunday"     :checkSunday,
-
-    }).then((_)
-    => Navigator.pushReplacementNamed(context, "/splash"));
+      "phone"           :_controllerPhone.text,
+      "address"         :_controllerAddress.text,
+      "street"          :street,
+      "village"         :village,
+      "city"            :city,
+      "lat"             :lat,
+      "lng"             :lng,
+      "startHours"      :_controllerStartHours.text,
+      "finishHours"     :_controllerFinishHours.text,
+      "checkMonday"     :checkMonday,
+      "checkTuesday"    :checkTuesday,
+      "checkWednesday"  :checkWednesday,
+      "checkThursday"   :checkThursday,
+      "checkFriday"     :checkFriday,
+      "checkSaturday"   :checkSaturday,
+      "checkSunday"     :checkSunday,
+    }).then((value){
+      if(type==TextConst.ENTERPRISE){
+        db.collection('cities').doc(city).set({
+          "city":city,
+        }).then((value) => Navigator.pushReplacementNamed(context, "/splash"));
+      }else{
+        Navigator.pushReplacementNamed(context, "/splash");
+      }
+    });
   }
 
   _verification(){
