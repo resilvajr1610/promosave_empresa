@@ -1,3 +1,5 @@
+import 'package:url_launcher/url_launcher.dart';
+
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
 
@@ -22,9 +24,13 @@ class _WhoWeAreScreenState extends State<WhoWeAreScreen> {
         photo: FirebaseAuth.instance.currentUser!.photoURL,
       ),
       appBar: AppBar(
+        iconTheme: IconThemeData(
+            color: PaletteColor.primaryColor
+        ),
         centerTitle: true,
-        backgroundColor: PaletteColor.primaryColor,
-        title: TextCustom(text: 'Quem Somos',size: 24.0,color: PaletteColor.white,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
+        backgroundColor: PaletteColor.white,
+        elevation: 0,
+        title: TextCustom(text: 'Quem Somos',size: 24.0,color: PaletteColor.primaryColor,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -38,11 +44,11 @@ class _WhoWeAreScreenState extends State<WhoWeAreScreen> {
               Container(
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-                child: TextCustom(text: 'Quem somos',color: PaletteColor.primaryColor,size: 16.0,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
+                child: TextCustom(text: 'Sobre nós',color: PaletteColor.primaryColor,size: 16.0,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: TextCustom(text: 'Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ',
+                child: TextCustom(text: 'Somos uma Startup que atua na luta contra o desperdício, fornecendo alimentos que seriam descartados por terem sido produzidos em excesso a um preço acessível. ',
                   color: PaletteColor.grey,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start,),
               ),
               SizedBox(height: 10),
@@ -54,7 +60,7 @@ class _WhoWeAreScreenState extends State<WhoWeAreScreen> {
               SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: TextCustom(text: 'Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ',
+                child: TextCustom(text: 'Fornecer comida de qualidade a um preço acessível para todos e evitando o desperdício. ',
                   color: PaletteColor.grey,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start,),
               ),
               SizedBox(height: 10),
@@ -68,8 +74,20 @@ class _WhoWeAreScreenState extends State<WhoWeAreScreen> {
                 children: [
                   Icon(FontAwesomeIcons.twitterSquare,color: PaletteColor.grey,size: 0,),
                   Icon(FontAwesomeIcons.twitterSquare,color: PaletteColor.grey,size: 40,),
-                  Icon(FontAwesomeIcons.facebookSquare,color: PaletteColor.grey,size: 40,),
-                  Icon(FontAwesomeIcons.instagramSquare,color: PaletteColor.grey,size: 40,),
+                  IconButton(
+                    onPressed: () async {
+                      String url = 'https://www.facebook.com/promosavebrasil';
+                      await launch(url);
+                    },
+                    icon: Icon(FontAwesomeIcons.facebookSquare,color: PaletteColor.grey,size: 40,),
+                  ),
+                  IconButton(
+                    onPressed: () async {
+                      String url = 'https://www.instagram.com/promosavebrasil/';
+                      await launch(url);
+                    },
+                    icon: Icon(FontAwesomeIcons.instagramSquare,color: PaletteColor.grey,size: 40,),
+                  ),
                   Icon(FontAwesomeIcons.twitterSquare,color: PaletteColor.grey,size: 0,),
                 ],
               )

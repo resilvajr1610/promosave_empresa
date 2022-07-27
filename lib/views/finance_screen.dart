@@ -22,9 +22,16 @@ class _FinanceScreenState extends State<FinanceScreen> {
         photo: FirebaseAuth.instance.currentUser!.photoURL,
       ),
       appBar: AppBar(
+        iconTheme: IconThemeData(
+            color: PaletteColor.primaryColor
+        ),
         centerTitle: true,
-        backgroundColor: PaletteColor.primaryColor,
-        title: TextCustom(text: 'Quem Somos',size: 24.0,color: PaletteColor.white,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
+        backgroundColor: PaletteColor.white,
+        elevation: 0,
+        title: Image.asset(
+          'assets/image/logo_light.png',
+          height: 60,
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(

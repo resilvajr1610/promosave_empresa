@@ -61,12 +61,15 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
       ),
       backgroundColor: PaletteColor.white,
       appBar: AppBar(
-        elevation: 0,
+        iconTheme: IconThemeData(
+            color: PaletteColor.primaryColor
+        ),
         centerTitle: true,
-        backgroundColor: PaletteColor.primaryColor,
+        backgroundColor: PaletteColor.white,
+        elevation: 0,
         title: Image.asset(
-          'assets/image/logo.png',
-          height: 100,
+          'assets/image/logo_light.png',
+          height: 60,
         ),
       ),
       body: SingleChildScrollView(

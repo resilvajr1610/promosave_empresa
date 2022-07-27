@@ -237,10 +237,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       backgroundColor: PaletteColor.white,
       appBar: AppBar(
-        elevation: 0,
+        iconTheme: IconThemeData(
+            color: PaletteColor.primaryColor
+        ),
         centerTitle: true,
-        backgroundColor: PaletteColor.primaryColor,
-        title: TextCustom(text: 'Perfil',size: 24.0,color: PaletteColor.white,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
+        backgroundColor: PaletteColor.white,
+        elevation: 0,
+        title: TextCustom(text: 'Perfil',size: 24.0,color: PaletteColor.primaryColor,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
       ),
       body: SingleChildScrollView(
         child: Container(

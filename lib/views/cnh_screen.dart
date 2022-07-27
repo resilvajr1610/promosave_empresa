@@ -85,9 +85,13 @@ class _CnhScreenState extends State<CnhScreen> {
       key: _scaffoldKey,
       backgroundColor: PaletteColor.white,
       appBar: AppBar(
+        iconTheme: IconThemeData(
+            color: PaletteColor.primaryColor
+        ),
         centerTitle: true,
-        backgroundColor: PaletteColor.primaryColor,
-        title: TextCustom(text: 'Cadastro',size: 24.0,color: PaletteColor.white,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
+        backgroundColor: PaletteColor.white,
+        elevation: 0,
+        title: TextCustom(text: 'Cadastro',size: 24.0,color: PaletteColor.primaryColor,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

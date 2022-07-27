@@ -84,12 +84,16 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         photo: FirebaseAuth.instance.currentUser!.photoURL,
       ),
       appBar: AppBar(
+        iconTheme: IconThemeData(
+            color: PaletteColor.primaryColor
+        ),
         centerTitle: true,
-        backgroundColor: PaletteColor.primaryColor,
+        backgroundColor: PaletteColor.white,
+        elevation: 0,
         title: TextCustom(
           text: 'Perguntas frequentes',
           size: 24.0,
-          color: PaletteColor.white,
+          color: PaletteColor.primaryColor,
           fontWeight: FontWeight.bold,
           textAlign: TextAlign.center,
         ),
