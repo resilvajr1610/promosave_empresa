@@ -1,6 +1,7 @@
 import 'package:google_place/google_place.dart';
 import '../Utils/colors.dart';
 import '../Utils/text_const.dart';
+import '../models/alert_model.dart';
 import '../utils/export.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -90,16 +91,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  Future _savePhoto(String name) async {
+  Future _savePhoto(String name,String type) async {
+    final image;
     try {
-      final image = await ImagePicker()
-          .pickImage(source: ImageSource.camera, imageQuality: 100);
+      if(type=='camera'){
+        image = await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 100);
+      }else{
+        image = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 100);
+      }
       if (image == null) return;
+
+      Navigator.of(context).pop();
 
       final imageTemporary = File(image.path);
       setState(() {
         this.picture = imageTemporary;
         setState(() {
+          urlPhotoProfile='';
           _sending = true;
         });
         _uploadImage(name);
@@ -255,7 +263,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
               urlPhotoProfile!="" ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child:GestureDetector(
-                  onTap: ()=>_savePhoto('urlPhotoProfile'),
+                  onTap: ()=>AlertModel().alert('Perfil !', 'Escolha uma opção para \nselecionar sua foto', PaletteColor.grey, PaletteColor.grey, context,
+                    [
+                      ButtonCustom(
+                        onPressed: () => _savePhoto('urlPhotoProfile','camera'),
+                        text: 'Câmera',
+                        colorBorder: PaletteColor.greyInput,
+                        colorButton: PaletteColor.greyInput,
+                        colorText: PaletteColor.white,
+                        size: 14.0,
+                        heightCustom: 0.07,
+                        widthCustom: 0.7,
+                      ),
+                      ButtonCustom(
+                        onPressed: () => _savePhoto('urlPhotoProfile','gallery'),
+                        text: 'Galeria',
+                        colorBorder: PaletteColor.greyInput,
+                        colorButton: PaletteColor.greyInput,
+                        colorText: PaletteColor.white,
+                        size: 14.0,
+                        heightCustom: 0.07,
+                        widthCustom: 0.7,
+                      ),
+                    ]),
                   child: CircleAvatar(
                     radius: 40,
                     backgroundColor: PaletteColor.grey,
@@ -263,7 +293,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ):GestureDetector(
-                onTap: ()=>_savePhoto('urlPhotoProfile'),
+                onTap: ()=>AlertModel().alert('Perfil !', 'Escolha uma opção para \nselecionar sua foto', PaletteColor.grey, PaletteColor.grey, context,
+                  [
+                    ButtonCustom(
+                      onPressed: () => _savePhoto('urlPhotoProfile','camera'),
+                      text: 'Câmera',
+                      colorBorder: PaletteColor.greyInput,
+                      colorButton: PaletteColor.greyInput,
+                      colorText: PaletteColor.white,
+                      size: 14.0,
+                      heightCustom: 0.07,
+                      widthCustom: 0.7,
+                    ),
+                    ButtonCustom(
+                      onPressed: () => _savePhoto('urlPhotoProfile','gallery'),
+                      text: 'Galeria',
+                      colorBorder: PaletteColor.greyInput,
+                      colorButton: PaletteColor.greyInput,
+                      colorText: PaletteColor.white,
+                      size: 14.0,
+                      heightCustom: 0.07,
+                      widthCustom: 0.7,
+                    ),
+                  ]),
                 child: Container(
                   margin: const EdgeInsets.all(8.0),
                   height: 90,
@@ -297,7 +349,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: TextCustom(text: 'Foto banner', size: 16.0, color: PaletteColor.grey, fontWeight: FontWeight.bold,textAlign: TextAlign.center,)
                   ),
                   urlPhotoBanner!=""?GestureDetector(
-                    onTap: ()=>_savePhoto('urlPhotoBanner'),
+                    onTap: ()=>AlertModel().alert('Perfil !', 'Escolha uma opção para \nselecionar sua foto', PaletteColor.grey, PaletteColor.grey, context,
+                        [
+                          ButtonCustom(
+                            onPressed: () => _savePhoto('urlPhotoBanner','camera'),
+                            text: 'Câmera',
+                            colorBorder: PaletteColor.greyInput,
+                            colorButton: PaletteColor.greyInput,
+                            colorText: PaletteColor.white,
+                            size: 14.0,
+                            heightCustom: 0.07,
+                            widthCustom: 0.7,
+                          ),
+                          ButtonCustom(
+                            onPressed: () => _savePhoto('urlPhotoBanner','gallery'),
+                            text: 'Galeria',
+                            colorBorder: PaletteColor.greyInput,
+                            colorButton: PaletteColor.greyInput,
+                            colorText: PaletteColor.white,
+                            size: 14.0,
+                            heightCustom: 0.07,
+                            widthCustom: 0.7,
+                          ),
+                        ]),
                     child: Container(
                       margin: const EdgeInsets.all(4.0),
                       height: 90,
@@ -310,7 +384,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                   ): GestureDetector(
-                    onTap: ()=>_savePhoto('urlPhotoBanner'),
+                    onTap: ()=>AlertModel().alert('Perfil !', 'Escolha uma opção para \nselecionar sua foto', PaletteColor.grey, PaletteColor.grey, context,
+                        [
+                          ButtonCustom(
+                            onPressed: () => _savePhoto('urlPhotoBanner','camera'),
+                            text: 'Câmera',
+                            colorBorder: PaletteColor.greyInput,
+                            colorButton: PaletteColor.greyInput,
+                            colorText: PaletteColor.white,
+                            size: 14.0,
+                            heightCustom: 0.08,
+                            widthCustom: 0.7,
+                          ),
+                          ButtonCustom(
+                            onPressed: () => _savePhoto('urlPhotoBanner','gallery'),
+                            text: 'Galeria',
+                            colorBorder: PaletteColor.greyInput,
+                            colorButton: PaletteColor.greyInput,
+                            colorText: PaletteColor.white,
+                            size: 14.0,
+                            heightCustom: 0.08,
+                            widthCustom: 0.7,
+                          ),
+                        ]),
                     child: Container(
                       margin: const EdgeInsets.all(4.0),
                       height: 90,

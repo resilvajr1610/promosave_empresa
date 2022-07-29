@@ -17,8 +17,8 @@ class ButtonCustom extends StatelessWidget {
     required this.colorButton,
     required this.colorText,
     required this.colorBorder,
-    required this.widthCustom,
-    required this.heightCustom
+    this.widthCustom = 1.0,
+    this.heightCustom = 1.0
   });
 
   @override

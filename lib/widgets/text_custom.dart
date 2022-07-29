@@ -7,9 +7,16 @@ class TextCustom extends StatelessWidget {
   final color;
   final fontWeight;
   final textAlign;
-  int? maxLines=2;
+  final maxLines;
 
-  TextCustom({required this.text, required this.size,required this.color,required this.fontWeight, required this.textAlign,this.maxLines});
+  TextCustom({
+    required this.text,
+    this.size = 16.0,
+    required this.color,
+    this.fontWeight = FontWeight.normal,
+    this.textAlign = TextAlign.start,
+    this.maxLines=2
+  });
 
   @override
   Widget build(BuildContext context) {

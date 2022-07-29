@@ -1,5 +1,6 @@
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
+import '../models/alert_model.dart';
 
 class CnhScreen extends StatefulWidget {
   const CnhScreen({Key? key}) : super(key: key);
@@ -18,11 +19,17 @@ class _CnhScreenState extends State<CnhScreen> {
   String _urlPhotoProfile ="";
   File? picture;
 
-  Future _savePhoto(String name) async {
+  Future _savePhoto(String name,String type) async {
+    final image;
     try {
-      final image = await ImagePicker()
-          .pickImage(source: ImageSource.camera, imageQuality: 100);
+      if(type=='camera'){
+        image = await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 100);
+      }else{
+        image = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 100);
+      }
       if (image == null) return;
+
+      Navigator.of(context).pop();
 
       final imageTemporary = File(image.path);
       setState(() {
@@ -109,7 +116,29 @@ class _CnhScreenState extends State<CnhScreen> {
             child: TextCustom(text:'Foto da CNH',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
           ),
           _sending==false? GestureDetector(
-            onTap: ()=>_savePhoto('urlPhotoCnh'),
+            onTap: ()=>AlertModel().alert('Foto CNH', 'Escolha uma opção para \nselecionar sua foto', PaletteColor.grey, PaletteColor.grey, context,
+                [
+                  ButtonCustom(
+                    onPressed: () => _savePhoto('urlPhotoCnh','camera'),
+                    text: 'Câmera',
+                    colorBorder: PaletteColor.greyInput,
+                    colorButton: PaletteColor.greyInput,
+                    colorText: PaletteColor.white,
+                    size: 14.0,
+                    widthCustom: 0.7,
+                    heightCustom: 0.07,
+                  ),
+                  ButtonCustom(
+                    onPressed: () => _savePhoto('urlPhotoCnh','gallery'),
+                    text: 'Galeria',
+                    colorBorder: PaletteColor.greyInput,
+                    colorButton: PaletteColor.greyInput,
+                    colorText: PaletteColor.white,
+                    size: 14.0,
+                    widthCustom: 0.7,
+                    heightCustom: 0.07,
+                  ),
+                ]),
             child: _urlPhotoCnh ==""?Container(
               margin: EdgeInsets.all(10),
               height: height*0.22,
@@ -148,7 +177,29 @@ class _CnhScreenState extends State<CnhScreen> {
             child: TextCustom(text:'Foto do rosto',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
           ),
           _sending==false? GestureDetector(
-            onTap: ()=>_savePhoto('urlPhotoProfile'),
+            onTap: ()=>AlertModel().alert('Foto do rosto', 'Escolha uma opção para \nselecionar sua foto', PaletteColor.grey, PaletteColor.grey, context,
+                [
+                  ButtonCustom(
+                    onPressed: () => _savePhoto('urlPhotoProfile','camera'),
+                    text: 'Câmera',
+                    colorBorder: PaletteColor.greyInput,
+                    colorButton: PaletteColor.greyInput,
+                    colorText: PaletteColor.white,
+                    size: 14.0,
+                    widthCustom: 0.7,
+                    heightCustom: 0.07,
+                  ),
+                  ButtonCustom(
+                    onPressed: () => _savePhoto('urlPhotoProfile','gallery'),
+                    text: 'Galeria',
+                    colorBorder: PaletteColor.greyInput,
+                    colorButton: PaletteColor.greyInput,
+                    colorText: PaletteColor.white,
+                    size: 14.0,
+                    widthCustom: 0.7,
+                    heightCustom: 0.07,
+                  ),
+                ]),
             child: _urlPhotoProfile ==""?Container(
               margin: EdgeInsets.all(10),
               height: height*0.22,

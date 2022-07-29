@@ -50,10 +50,10 @@ class DrawerCustom extends StatelessWidget {
                           ),
                   ),
                   Container(
-                      width: width * 0.4,
+                      width: width * 0.45,
                       child: TextCustom(
                         text: enterprise.toUpperCase(),
-                        size: 16.0,
+                        size: 15.0,
                         color: PaletteColor.primaryColor,
                         fontWeight: FontWeight.bold,
                         textAlign: TextAlign.center,
