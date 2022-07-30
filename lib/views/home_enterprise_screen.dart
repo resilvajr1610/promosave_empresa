@@ -1,4 +1,6 @@
 
+import 'package:promosave_empresa/Utils/text_const.dart';
+
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
 
@@ -12,6 +14,7 @@ class HomeEnterpriseScreen extends StatefulWidget {
 class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   List _resultsList = [];
+  int requests=0;
 
   _data() async {
     var data = await db
@@ -24,11 +27,24 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
     });
     return "complete";
   }
+  _contRequests()async{
+    var data = await db
+        .collection("shopping")
+        .where('idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('status', isEqualTo: TextConst.ORDERCREATED)
+        .get();
+
+    setState(() {
+      requests = data.docs.length;
+    });
+    return "complete";
+  }
 
   @override
   void initState() {
     super.initState();
     _data();
+    _contRequests();
   }
 
   @override
@@ -158,7 +174,7 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
                               fontSize: 14,
                               fontFamily: 'Nunito',
                               fontWeight: FontWeight.bold)),
-                      Container(
+                      requests!=0?Container(
                         margin: EdgeInsets.symmetric(horizontal: 5),
                         padding:
                             EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -166,14 +182,14 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
                             borderRadius: BorderRadius.circular(60),
                             color: PaletteColor.white),
                         child: Text(
-                          '2',
+                          requests.toString(),
                           style: TextStyle(
                               color: PaletteColor.primaryColor,
                               fontSize: 14,
                               fontFamily: 'Nunito',
                               fontWeight: FontWeight.bold),
                         ),
-                      )
+                      ):Container()
                     ],
                   )),
               Container(

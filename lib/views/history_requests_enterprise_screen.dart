@@ -93,7 +93,6 @@ class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpr
                     screen: 'history',
                     idRequests: 0001,
                     date: '03/06/2022',
-                    time: '18:00',
                     client: 'Carlos Silva',
                     contMixed: 3,
                     contSalt: 0,
@@ -110,13 +109,13 @@ class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpr
                         }
                       });
                     },
+                    onTapButtom: (){},
                   ),
                   ContainerRequestsEnterprise(
                     screen: 'history',
                     showDetailsRequests: showDetailsRequests2,
                     idRequests: 0002,
                     date: '03/06/2022',
-                    time: '21:00',
                     client: 'Maria Almeida',
                     contMixed: 1,
                     contSalt: 3,
@@ -132,12 +131,12 @@ class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpr
                         }
                       });
                     },
+                    onTapButtom: (){},
                   ),
                   ContainerRequestsEnterprise(
                     screen: 'history',
                     idRequests: 0003,
                     date: '03/06/2022',
-                    time: '18:00',
                     client: 'Carlos Silva',
                     contMixed: 2,
                     contSalt: 0,
@@ -154,13 +153,13 @@ class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpr
                         }
                       });
                     },
+                    onTapButtom: (){},
                   ),
                   ContainerRequestsEnterprise(
                     screen: 'history',
                     showDetailsRequests: showDetailsRequests4,
                     idRequests: 0004,
                     date: '03/06/2022',
-                    time: '21:00',
                     client: 'Maria Almeida',
                     contMixed: 1,
                     contSalt: 1,
@@ -176,12 +175,12 @@ class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpr
                         }
                       });
                     },
+                    onTapButtom: (){},
                   ),
                   ContainerRequestsEnterprise(
                     screen: 'history',
                     idRequests: 0005,
                     date: '03/06/2022',
-                    time: '18:00',
                     client: 'Carlos Silva',
                     contMixed: 2,
                     contSalt: 0,
@@ -198,13 +197,13 @@ class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpr
                         }
                       });
                     },
+                    onTapButtom: (){},
                   ),
                   ContainerRequestsEnterprise(
                     screen: 'history',
                     showDetailsRequests: showDetailsRequests6,
                     idRequests: 0006,
                     date: '03/06/2022',
-                    time: '21:00',
                     client: 'Maria Almeida',
                     contMixed: 1,
                     contSalt: 1,
@@ -220,6 +219,7 @@ class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpr
                         }
                       });
                     },
+                    onTapButtom: (){},
                   ),
                 ],
               ),

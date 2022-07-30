@@ -4,13 +4,13 @@ import '../Utils/export.dart';
 class ContainerRequestsEnterprise extends StatelessWidget {
 
   final onTapIcon;
+  final onTapButtom;
   final showDetailsRequests;
   final idRequests;
   final contMixed;
   final contSalt;
   final contSweet;
   final date;
-  final time;
   final textButton;
   final client;
   final type;
@@ -18,10 +18,10 @@ class ContainerRequestsEnterprise extends StatelessWidget {
 
   ContainerRequestsEnterprise({
     required this.onTapIcon,
+    required this.onTapButtom,
     required this.showDetailsRequests,
     required this.idRequests,
     required this.date,
-    required this.time,
     required this.client,
     required this.contMixed,
     required this.contSalt,
@@ -39,7 +39,6 @@ class ContainerRequestsEnterprise extends StatelessWidget {
 
     return Column(
       children: [
-        Divider(color: PaletteColor.greyInput),
         GestureDetector(
           onTap: onTapIcon,
           child: Row(
@@ -55,7 +54,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
               Container(
                 width: width*0.35,
                 child: TextCustom(
-                    text: '$date $time',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+                    text: '$date',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
                 ),
               ),
               GestureDetector(
@@ -161,7 +160,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
               alignment: Alignment.centerRight,
               padding: EdgeInsets.symmetric(horizontal: 45),
               child: textButton != 'A caminho'? ButtonCustom(
-                  onPressed: ()=>Navigator.pushReplacementNamed(context, '/home_enterprise'),
+                  onPressed:onTapButtom,
                   widthCustom: 0.15,
                   heightCustom: 0.05,
                   text:  textButton,
@@ -200,6 +199,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
             ):Container()
           ],
         ):Container(),
+        Divider(color: PaletteColor.greyInput),
       ],
     );
   }

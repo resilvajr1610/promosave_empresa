@@ -1,5 +1,9 @@
+import 'package:intl/intl.dart';
+import 'package:promosave_empresa/Utils/text_const.dart';
+
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
+import '../models/requests_model.dart';
 
 class RequestsEnterpriseScreen extends StatefulWidget {
 
@@ -9,12 +13,55 @@ class RequestsEnterpriseScreen extends StatefulWidget {
 
 class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
 
-  bool showDetailsRequests1=false;
-  bool showDetailsRequests2=false;
-  bool showDetailsRequests3=false;
-  bool showDetailsRequests4=false;
-  bool showDetailsRequests5=false;
-  bool showDetailsRequests6=false;
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  List<RequestsModel> listRequests=[];
+  List _resultsRequestORDERCREATED = [];
+  List _resultsRequestORDERACCEPTED = [];
+  List _resultsRequestORDERAREADY = [];
+  bool showAccept = false;
+  bool showWaiting = false;
+  bool showDelivery = false;
+
+  dataORDERCREATED()async{
+    var data = await db.collection("shopping")
+        .where('idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('status', isEqualTo: TextConst.ORDERCREATED)
+        .get();
+
+    setState(() {
+      _resultsRequestORDERCREATED = data.docs;
+    });
+  }
+
+  dataORDERACCEPTED()async{
+    var data = await db.collection("shopping")
+        .where('idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('status', isEqualTo: TextConst.ORDERACCEPTED)
+        .get();
+
+    setState(() {
+      _resultsRequestORDERACCEPTED = data.docs;
+    });
+  }
+
+  dataORDERAREADY()async{
+    var data = await db.collection("shopping")
+        .where('idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('status', isEqualTo: TextConst.ORDERAREADY)
+        .get();
+
+    setState(() {
+      _resultsRequestORDERAREADY = data.docs;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    dataORDERCREATED();
+    dataORDERACCEPTED();
+    dataORDERAREADY();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,178 +87,212 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
           height: 60,
         ),
       ),
-      body: Container(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Container(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                width: width,
-                child: TextCustom(
-                    text: 'Pedidos em andamento',color: PaletteColor.grey,size: 16.0,fontWeight: FontWeight.bold,textAlign: TextAlign.center
-                )
-            ),
-            Container(
-              height: height*0.7,
-              child: ListView(
-                children: [
-                  Container(
-                      padding: EdgeInsets.symmetric(horizontal: 24),
-                      width: width,
-                      child: TextCustom(
-                          text: 'Para aceitar',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
-                      )
-                  ),
-                  ContainerRequestsEnterprise(
-                    screen: 'request',
-                    idRequests: 0001,
-                    date: '03/06/2022',
-                    time: '18:00',
-                    client: 'Carlos Silva',
-                    contMixed: 3,
-                    contSalt: 0,
-                    contSweet: 3,
-                    type: 'Para entrega',
-                    textButton: 'Aceitar',
-                    showDetailsRequests: showDetailsRequests1,
-                    onTapIcon: (){
-                      setState(() {
-                        if(showDetailsRequests1==false){
-                          showDetailsRequests1=true;
-                        }else{
-                          showDetailsRequests1=false;
-                        }
-                      });
-                    },
-                  ),
-                  ContainerRequestsEnterprise(
-                    screen: 'request',
-                    showDetailsRequests: showDetailsRequests2,
-                    idRequests: 0002,
-                    date: '03/06/2022',
-                    time: '21:00',
-                    client: 'Maria Almeida',
-                    contMixed: 1,
-                    contSalt: 3,
-                    contSweet: 0,
-                    type: 'Retirada do cliente',
-                    textButton: 'Pronto',
-                    onTapIcon: (){
-                      setState(() {
-                        if(showDetailsRequests2==false){
-                          showDetailsRequests2=true;
-                        }else{
-                          showDetailsRequests2=false;
-                        }
-                      });
-                    },
-                  ),
-                  Container(
-                      padding: EdgeInsets.symmetric(horizontal: 24,vertical: 10),
-                      width: width,
-                      child: TextCustom(
-                          text: 'Aguardando preparo',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
-                      )
-                  ),
-                  ContainerRequestsEnterprise(
-                    screen: 'request',
-                    idRequests: 0003,
-                    date: '03/06/2022',
-                    time: '18:00',
-                    client: 'Carlos Silva',
-                    contMixed: 2,
-                    contSalt: 0,
-                    contSweet: 3,
-                    type: 'Para entrega',
-                    textButton: 'Pronto',
-                    showDetailsRequests: showDetailsRequests3,
-                    onTapIcon: (){
-                      setState(() {
-                        if(showDetailsRequests3==false){
-                          showDetailsRequests3=true;
-                        }else{
-                          showDetailsRequests3=false;
-                        }
-                      });
-                    },
-                  ),
-                  ContainerRequestsEnterprise(
-                    screen: 'request',
-                    showDetailsRequests: showDetailsRequests4,
-                    idRequests: 0004,
-                    date: '03/06/2022',
-                    time: '21:00',
-                    client: 'Maria Almeida',
-                    contMixed: 1,
-                    contSalt: 1,
-                    contSweet: 1,
-                    type: 'Retirada do cliente',
-                    textButton: 'Pronto',
-                    onTapIcon: (){
-                      setState(() {
-                        if(showDetailsRequests4==false){
-                          showDetailsRequests4=true;
-                        }else{
-                          showDetailsRequests4=false;
-                        }
-                      });
-                    },
-                  ),
-                  Container(
-                      padding: EdgeInsets.symmetric(horizontal: 24,vertical: 10),
-                      width: width,
-                      child: TextCustom(
-                          text: 'Aguardando entrega',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
-                      )
-                  ),
-                  ContainerRequestsEnterprise(
-                    screen: 'request',
-                    idRequests: 0005,
-                    date: '03/06/2022',
-                    time: '18:00',
-                    client: 'Carlos Silva',
-                    contMixed: 2,
-                    contSalt: 0,
-                    contSweet: 1,
-                    type: 'Para entrega',
-                    textButton: 'Confirmar retirada',
-                    showDetailsRequests: showDetailsRequests5,
-                    onTapIcon: (){
-                      setState(() {
-                        if(showDetailsRequests5==false){
-                          showDetailsRequests5=true;
-                        }else{
-                          showDetailsRequests5=false;
-                        }
-                      });
-                    },
-                  ),
-                  ContainerRequestsEnterprise(
-                    screen: 'request',
-                    showDetailsRequests: showDetailsRequests6,
-                    idRequests: 0006,
-                    date: '03/06/2022',
-                    time: '21:00',
-                    client: 'Maria Almeida',
-                    contMixed: 1,
-                    contSalt: 1,
-                    contSweet: 2,
-                    type: 'Retirada do cliente',
-                    textButton: 'A caminho',
-                    onTapIcon: (){
-                      setState(() {
-                        if(showDetailsRequests6==false){
-                          showDetailsRequests6=true;
-                        }else{
-                          showDetailsRequests6=false;
-                        }
-                      });
-                    },
-                  ),
-                ],
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Container(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  width: width,
+                  child: TextCustom(
+                      text: 'Pedidos em andamento',color: PaletteColor.grey,size: 16.0,fontWeight: FontWeight.bold,textAlign: TextAlign.center
+                  )
               ),
-            ),
-          ],
+              TextButton(
+                onPressed: (){
+                  setState(() {
+                    showAccept?showAccept=false:showAccept=true;
+                  });
+                },
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 24,),
+                    width: width,
+                    child: Row(
+                      children: [
+                        TextCustom(
+                            text: 'Para aceitar',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+                        ),
+                        SizedBox(width: 10,),
+                        Icon(showAccept?Icons.keyboard_arrow_down:Icons.keyboard_arrow_up,color: PaletteColor.primaryColor,size: 30,)
+                      ],
+                    )
+                ),
+              ),
+              showAccept?Container(
+                      height: height*0.5,
+                      child: ListView.builder(
+                          itemCount: _resultsRequestORDERCREATED.length,
+                          itemBuilder:(context,index){
+
+                            DocumentSnapshot item = _resultsRequestORDERCREATED[index];
+
+                            if(_resultsRequestORDERCREATED.length == 0){
+                              return Center(
+                                  child: Text('Nenhum pedido encontrado',
+                                    style: TextStyle(fontSize: 16,color: PaletteColor.primaryColor),)
+                              );
+                            }else{
+                              listRequests.add(
+                                  RequestsModel(
+                                      showRequests: false
+                                  )
+                              );
+                              return ContainerRequestsEnterprise(
+                                screen: 'request',
+                                idRequests: item['order'],
+                                date: DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(item['hourRequest'])),
+                                client: item['nameClient'],
+                                contMixed: item['quantMista'],
+                                contSalt: item['quantSalgada'],
+                                contSweet: item['quantDoce'],
+                                type: item['type'],
+                                textButton: 'Aceitar',
+                                showDetailsRequests: listRequests[index].showRequests,
+                                onTapButtom: (){
+                                  db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.ORDERACCEPTED})
+                                      .then((value) => Navigator.pushReplacementNamed(context, '/requests_enterprise'));
+                                },
+                                onTapIcon: (){
+                                  setState(() {
+                                    listRequests[index].showRequests?listRequests[index].showRequests=false:listRequests[index].showRequests=true;
+                                  });
+                                },
+                              );
+                            }
+                          }
+                      ),
+                    ):Container(),
+              TextButton(
+                onPressed: (){
+                  setState(() {
+                    showWaiting?showWaiting=false:showWaiting=true;
+                  });
+                },
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 24,),
+                    width: width,
+                    child: Row(
+                      children: [
+                        TextCustom(
+                            text: 'Aguardando preparo',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+                        ),
+                        SizedBox(width: 10,),
+                        Icon(showWaiting?Icons.keyboard_arrow_down:Icons.keyboard_arrow_up,color: PaletteColor.primaryColor,size: 30,)
+                      ],
+                    )
+                ),
+              ),
+              showWaiting?Container(
+                height: height*0.5,
+                child: ListView.builder(
+                    itemCount: _resultsRequestORDERACCEPTED.length,
+                    itemBuilder:(context,index){
+
+                      DocumentSnapshot item = _resultsRequestORDERACCEPTED[index];
+
+                      if(_resultsRequestORDERACCEPTED.length == 0){
+                        return Center(
+                            child: Text('Nenhum pedido encontrado',
+                              style: TextStyle(fontSize: 16,color: PaletteColor.primaryColor),)
+                        );
+                      }else{
+                        listRequests.add(
+                            RequestsModel(
+                                showRequests: false
+                            )
+                        );
+                        return ContainerRequestsEnterprise(
+                          screen: 'request',
+                          idRequests: item['order'],
+                          date: DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(item['hourRequest'])),
+                          client: item['nameClient'],
+                          contMixed: item['quantMista'],
+                          contSalt: item['quantSalgada'],
+                          contSweet: item['quantDoce'],
+                          type: item['type'],
+                          textButton: 'Pronto',
+                          showDetailsRequests: listRequests[index].showRequests,
+                          onTapButtom: (){
+                            db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.ORDERAREADY})
+                                .then((value) => Navigator.pushReplacementNamed(context, '/requests_enterprise'));
+                          },
+                          onTapIcon: (){
+                            setState(() {
+                              listRequests[index].showRequests?listRequests[index].showRequests=false:listRequests[index].showRequests=true;
+                            });
+                          },
+                        );
+                      }
+                    }
+                ),
+              ):Container(),
+              Container(
+                  padding: EdgeInsets.symmetric(horizontal: 24,),
+                  width: width,
+                  child: TextButton(
+                    onPressed:(){
+                      setState(() {
+                        showDelivery?showDelivery=false:showDelivery=true;
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        TextCustom(
+                            text: 'Aguardando entrega',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+                        ),
+                        SizedBox(width: 10,),
+                        Icon(showDelivery?Icons.keyboard_arrow_down:Icons.keyboard_arrow_up,color: PaletteColor.primaryColor,size: 30,)
+                      ],
+                    ),
+                  )
+              ),
+              showDelivery?Container(
+                height: height*0.5,
+                child: ListView.builder(
+                    itemCount: _resultsRequestORDERAREADY.length,
+                    itemBuilder:(context,index){
+
+                      DocumentSnapshot item = _resultsRequestORDERAREADY[index];
+
+                      if(_resultsRequestORDERAREADY.length == 0){
+                        return Center(
+                            child: Text('Nenhum pedido encontrado',
+                              style: TextStyle(fontSize: 16,color: PaletteColor.primaryColor),)
+                        );
+                      }else{
+                        listRequests.add(
+                            RequestsModel(
+                                showRequests: false
+                            )
+                        );
+                        return ContainerRequestsEnterprise(
+                          screen: 'request',
+                          idRequests: item['order'],
+                          date: DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(item['hourRequest'])),
+                          client: item['nameClient'],
+                          contMixed: item['quantMista'],
+                          contSalt: item['quantSalgada'],
+                          contSweet: item['quantDoce'],
+                          type: item['type'],
+                          textButton: 'Confirmar retirada',
+                          showDetailsRequests: listRequests[index].showRequests,
+                          onTapButtom: (){
+                            db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.ORDERAREADY})
+                                .then((value) => Navigator.pushReplacementNamed(context, '/requests_enterprise'));
+                          },
+                          onTapIcon: (){
+                            setState(() {
+                              listRequests[index].showRequests?listRequests[index].showRequests=false:listRequests[index].showRequests=true;
+                            });
+                          },
+                        );
+                      }
+                    }
+                ),
+              ):Container()
+            ],
+          ),
         ),
       ),
     );
