@@ -28,7 +28,7 @@ class ContainerDelivery extends StatelessWidget {
         child: Card(
           color: PaletteColor.greyLight,
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(5),
             child: Column(
               children: [
                 Row(

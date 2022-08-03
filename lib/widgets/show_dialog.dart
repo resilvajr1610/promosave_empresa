@@ -25,6 +25,9 @@ class ShowDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final width = MediaQuery.of(context).size.width;
+
     return AlertDialog(
       title: Center(child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -48,61 +51,46 @@ class ShowDialog extends StatelessWidget {
       titleTextStyle: TextStyle(color: PaletteColor.grey,fontSize: 14),
       content: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              TextCustom(
-                text: enterprise,
-                size: 13.0,
-                color: PaletteColor.grey,
-                fontWeight: FontWeight.bold,
-                textAlign: TextAlign.center,
-              ),
-              TextCustom(
-                text:' - '+ enterpriseAddress,
-                size: 13.0,
-                color: PaletteColor.grey,
-                fontWeight: FontWeight.normal,
-                textAlign: TextAlign.center,
-              ),
-            ],
+          TextCustom(
+            text: 'Estabelecimento : $enterprise',
+            size: 13.0,
+            color: PaletteColor.grey,
+            fontWeight: FontWeight.bold,
+            textAlign: TextAlign.start,
           ),
-          Row(
-            children: [
-              TextCustom(
-                text: client,
-                size: 13.0,
-                color: PaletteColor.grey,
-                fontWeight: FontWeight.bold,
-                textAlign: TextAlign.center,
-              ),
-              TextCustom(
-                text:' - '+ clientAddress,
-                size: 13.0,
-                color: PaletteColor.grey,
-                fontWeight: FontWeight.normal,
-                textAlign: TextAlign.center,
-              ),
-            ],
+          Container(
+            width: width*0.7,
+            child: TextCustom(
+              text: 'Endereço : $enterpriseAddress',
+              size: 13.0,
+              color: PaletteColor.grey,
+              fontWeight: FontWeight.normal,
+              textAlign: TextAlign.start,
+              maxLines: 3,
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextCustom(
-                text: 'Taxa de entrega',
-                size: 13.0,
-                color: PaletteColor.grey,
-                fontWeight: FontWeight.normal,
-                textAlign: TextAlign.center,
-              ),
-              TextCustom(
-                text:shipping,
-                size: 13.0,
-                color: PaletteColor.grey,
-                fontWeight: FontWeight.normal,
-                textAlign: TextAlign.center,
-              ),
-            ],
+          TextCustom(
+            text: 'Cliente : $client',
+            size: 13.0,
+            color: PaletteColor.grey,
+            fontWeight: FontWeight.bold,
+            textAlign: TextAlign.start,
+          ),
+          TextCustom(
+            text:'Local entrega : $clientAddress',
+            size: 13.0,
+            color: PaletteColor.grey,
+            fontWeight: FontWeight.normal,
+            textAlign: TextAlign.start,
+          ),
+          TextCustom(
+            text: 'Taxa de entrega : $shipping',
+            size: 13.0,
+            color: PaletteColor.grey,
+            fontWeight: FontWeight.normal,
+            textAlign: TextAlign.center,
           ),
         ],
       ),

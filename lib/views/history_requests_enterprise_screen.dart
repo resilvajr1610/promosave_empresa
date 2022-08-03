@@ -1,5 +1,9 @@
+import 'package:intl/intl.dart';
+
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
+import '../Utils/text_const.dart';
+import '../models/requests_model.dart';
 
 class HistoryRequestsEnterpriseScreen extends StatefulWidget {
 
@@ -10,14 +14,11 @@ class HistoryRequestsEnterpriseScreen extends StatefulWidget {
 class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpriseScreen> {
 
   FirebaseFirestore db = FirebaseFirestore.instance;
-  bool showDetailsRequests1=false;
-  bool showDetailsRequests2=false;
-  bool showDetailsRequests3=false;
-  bool showDetailsRequests4=false;
-  bool showDetailsRequests5=false;
-  bool showDetailsRequests6=false;
   final _itemsPeriod = ['últimos 7 dias','últimos 15 dias','últimos 30 dias'];
   String? _selectedPediod;
+  List<RequestsModel> listRequests=[];
+  List _allResults = [];
+  Map<String,dynamic>? data;
 
   DropdownMenuItem<String>  buildMenuItem(String item)=>DropdownMenuItem(
     value: item,
@@ -26,6 +27,29 @@ class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpr
       child: TextCustom(text: item,size: 16.0,textAlign: TextAlign.center,color: PaletteColor.grey, fontWeight: FontWeight.normal,),
     ),
   );
+
+  dataDelivery(var dataUser)async{
+    var data = await  db.collection("shopping")
+                        .where(dataUser?["type"]==TextConst.DELIVERYMAN?'idDelivery':'idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                        .where('status', isEqualTo: TextConst.ORDERFINISHED)
+                        .get();
+
+    setState(() {
+      _allResults = data.docs;
+    });
+  }
+  dataUser()async{
+    DocumentSnapshot snapshot = await  db.collection("enterprise").doc(FirebaseAuth.instance.currentUser!.uid).get();
+
+    data = snapshot.data() as Map<String, dynamic>?;
+    dataDelivery(data);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    dataUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,141 +111,47 @@ class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpr
             ),
             Container(
               height: height*0.65,
-              child: ListView(
-                children: [
-                  ContainerRequestsEnterprise(
+              child: ListView.builder(
+              itemCount: _allResults.length,
+              itemBuilder:(context,index) {
+                DocumentSnapshot item = _allResults[index];
+
+                if (_allResults.length == 0) {
+                  return Center(
+                      child: Text('Nenhum pedido encontrado',
+                        style: TextStyle(fontSize: 16, color: PaletteColor.primaryColor),)
+                  );
+                } else {
+                  listRequests.add(
+                      RequestsModel(
+                          showRequests: false
+                      )
+                  );
+                  return ContainerRequestsEnterprise(
+                    typeDelivery: data?["type"],
+                    totalFees: item['totalFees'],
                     screen: 'history',
-                    idRequests: 0001,
-                    date: '03/06/2022',
-                    client: 'Carlos Silva',
-                    contMixed: 3,
-                    contSalt: 0,
-                    contSweet: 3,
+                    priceMixed: item['priceMista'],
+                    priceSalt : item['priceSalgada'],
+                    priceSweet: item['priceDoce'],
+                    idRequests: item['order'],
+                    date: DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(item['hourRequest'])),
+                    client: item['nameClient'].toString().toUpperCase(),
+                    contMixed: item['quantMista'],
+                    contSalt: item['quantSalgada'],
+                    contSweet: item['quantDoce'],
                     type: 'Para entrega',
                     textButton: 'Aceitar',
-                    showDetailsRequests: showDetailsRequests1,
-                    onTapIcon: (){
+                    showDetailsRequests: listRequests[index].showRequests,
+                    onTapIcon: () {
                       setState(() {
-                        if(showDetailsRequests1==false){
-                          showDetailsRequests1=true;
-                        }else{
-                          showDetailsRequests1=false;
-                        }
+                        listRequests[index].showRequests?listRequests[index].showRequests=false:listRequests[index].showRequests=true;
                       });
                     },
-                    onTapButtom: (){},
-                  ),
-                  ContainerRequestsEnterprise(
-                    screen: 'history',
-                    showDetailsRequests: showDetailsRequests2,
-                    idRequests: 0002,
-                    date: '03/06/2022',
-                    client: 'Maria Almeida',
-                    contMixed: 1,
-                    contSalt: 3,
-                    contSweet: 0,
-                    type: 'Retirada do cliente',
-                    textButton: 'Pronto',
-                    onTapIcon: (){
-                      setState(() {
-                        if(showDetailsRequests2==false){
-                          showDetailsRequests2=true;
-                        }else{
-                          showDetailsRequests2=false;
-                        }
-                      });
-                    },
-                    onTapButtom: (){},
-                  ),
-                  ContainerRequestsEnterprise(
-                    screen: 'history',
-                    idRequests: 0003,
-                    date: '03/06/2022',
-                    client: 'Carlos Silva',
-                    contMixed: 2,
-                    contSalt: 0,
-                    contSweet: 3,
-                    type: 'Para entrega',
-                    textButton: 'Pronto',
-                    showDetailsRequests: showDetailsRequests3,
-                    onTapIcon: (){
-                      setState(() {
-                        if(showDetailsRequests3==false){
-                          showDetailsRequests3=true;
-                        }else{
-                          showDetailsRequests3=false;
-                        }
-                      });
-                    },
-                    onTapButtom: (){},
-                  ),
-                  ContainerRequestsEnterprise(
-                    screen: 'history',
-                    showDetailsRequests: showDetailsRequests4,
-                    idRequests: 0004,
-                    date: '03/06/2022',
-                    client: 'Maria Almeida',
-                    contMixed: 1,
-                    contSalt: 1,
-                    contSweet: 1,
-                    type: 'Retirada do cliente',
-                    textButton: 'Pronto',
-                    onTapIcon: (){
-                      setState(() {
-                        if(showDetailsRequests4==false){
-                          showDetailsRequests4=true;
-                        }else{
-                          showDetailsRequests4=false;
-                        }
-                      });
-                    },
-                    onTapButtom: (){},
-                  ),
-                  ContainerRequestsEnterprise(
-                    screen: 'history',
-                    idRequests: 0005,
-                    date: '03/06/2022',
-                    client: 'Carlos Silva',
-                    contMixed: 2,
-                    contSalt: 0,
-                    contSweet: 1,
-                    type: 'Para entrega',
-                    textButton: 'Confirmar retirada',
-                    showDetailsRequests: showDetailsRequests5,
-                    onTapIcon: (){
-                      setState(() {
-                        if(showDetailsRequests5==false){
-                          showDetailsRequests5=true;
-                        }else{
-                          showDetailsRequests5=false;
-                        }
-                      });
-                    },
-                    onTapButtom: (){},
-                  ),
-                  ContainerRequestsEnterprise(
-                    screen: 'history',
-                    showDetailsRequests: showDetailsRequests6,
-                    idRequests: 0006,
-                    date: '03/06/2022',
-                    client: 'Maria Almeida',
-                    contMixed: 1,
-                    contSalt: 1,
-                    contSweet: 2,
-                    type: 'Retirada do cliente',
-                    textButton: 'A caminho',
-                    onTapIcon: (){
-                      setState(() {
-                        if(showDetailsRequests6==false){
-                          showDetailsRequests6=true;
-                        }else{
-                          showDetailsRequests6=false;
-                        }
-                      });
-                    },
-                    onTapButtom: (){},
-                  ),
-                ],
+                    onTapButtom: () {},
+                  );
+                }
+              }
               ),
             ),
           ],

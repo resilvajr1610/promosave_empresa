@@ -139,6 +139,11 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                                   )
                               );
                               return ContainerRequestsEnterprise(
+                                typeDelivery: TextConst.ENTERPRISE,
+                                totalFees: item['totalFees'],
+                                priceMixed: item['priceMista'],
+                                priceSalt : item['priceSalgada'],
+                                priceSweet: item['priceDoce'],
                                 screen: 'request',
                                 idRequests: item['order'],
                                 date: DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(item['hourRequest'])),
@@ -203,6 +208,11 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                             )
                         );
                         return ContainerRequestsEnterprise(
+                          typeDelivery: TextConst.ENTERPRISE,
+                          totalFees: item['totalFees'],
+                          priceMixed: item['priceMista'],
+                          priceSalt : item['priceSalgada'],
+                          priceSweet: item['priceDoce'],
                           screen: 'request',
                           idRequests: item['order'],
                           date: DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(item['hourRequest'])),
@@ -267,6 +277,11 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                             )
                         );
                         return ContainerRequestsEnterprise(
+                          typeDelivery: TextConst.ENTERPRISE,
+                          totalFees: item['totalFees'],
+                          priceMixed: item['priceMista'],
+                          priceSalt : item['priceSalgada'],
+                          priceSweet: item['priceDoce'],
                           screen: 'request',
                           idRequests: item['order'],
                           date: DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(item['hourRequest'])),

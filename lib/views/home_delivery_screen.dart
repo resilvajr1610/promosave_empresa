@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
 import '../Utils/text_const.dart';
@@ -13,6 +15,7 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
 
   FirebaseFirestore db = FirebaseFirestore.instance;
   List _allResultsReady=[];
+  List _allResultsDelivery=[];
 
   data()async{
     var data = await db.collection("shopping")
@@ -24,28 +27,47 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
     });
   }
 
-  _showDialog() {
+  dataDelivery()async{
+    var data = await db.collection("shopping")
+        .where('status', isEqualTo: TextConst.ORDERDELIVERY)
+        .where('idDelivery', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    setState(() {
+      _allResultsDelivery = data.docs;
+    });
+  }
+
+  acceptDelivery(String idShopping,String type)async{
+    db.collection('shopping').doc(idShopping).update({
+      'idDelivery':FirebaseAuth.instance.currentUser!.uid,
+      'nameDelivery':FirebaseAuth.instance.currentUser!.displayName,
+      'status':type=='Aceitar'?TextConst.ORDERDELIVERY:TextConst.ORDERFINISHED
+    }).then((value) => Navigator.pushReplacementNamed(context, '/splash'));
+  }
+  
+  _showDialog(String idShopping,int order, String hourRequest,String nameClient,String clientAddress, String nameEnterprise,String enterpriseAddress, double totalFees,String type) {
     showGeneralDialog(
         context: context,
         barrierDismissible: false,
         barrierLabel: 'Dialog',
         pageBuilder: (_,__,___){
           return ShowDialog(
-            idRequest: '0025478',
-            date: '08/06/2022 17:30',
-            shipping: 'R\$ 5,00',
-            enterprise: 'Empresa',
-            enterpriseAddress: 'Itapetininga',
-            client: 'Cliente',
-            clientAddress: 'Itapetininga',
+            idRequest: order.toString(),
+            date: hourRequest,
+            shipping: 'R\$ ${totalFees.toStringAsFixed(2).replaceAll('.', ',')}',
+            enterprise: nameEnterprise,
+            enterpriseAddress: enterpriseAddress,
+            client: nameClient,
+            clientAddress: clientAddress,
             list: [
               ButtonCustom(
-                text: 'Aceitar',
+                text: type,
                 colorText: PaletteColor.white,
                 colorBorder: PaletteColor.primaryColor,
                 heightCustom: 0.05,
                 widthCustom: 0.2,
-                onPressed: () =>Navigator.pop(context),
+                onPressed: () =>acceptDelivery(idShopping,type),
                 size: 14.0,
                 colorButton: PaletteColor.primaryColor,
               ),
@@ -68,6 +90,7 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
   void initState() {
     super.initState();
     data();
+    dataDelivery();
   }
 
   @override
@@ -125,16 +148,27 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
                     if(_allResultsReady.length == 0){
                       return Center(
                           child: Text('Nenhum pedido encontrado',
-                            style: TextStyle(fontSize: 16,color: PaletteColor.primaryColor),)
+                            style: TextStyle(fontSize: 16,color: PaletteColor.primaryColor),
+                          )
                       );
                     }else{
 
                       return item['addressClient']!='Retirada no local'?ContainerDelivery(
                         photo: item['logoUrl'],
                         enterprise: item['nameEnterprise'].toString().toUpperCase(),
-                        address: item['addressClient'],
-                        shipping: 'R\$ 5,00',
-                        onTap: () => _showDialog(),
+                        address: item['addressEnterprise'],
+                        shipping: 'R\$ ${item['totalFees'].toStringAsFixed(2).replaceAll('.', ',')}',
+                        onTap: () => _showDialog(
+                            item['idShopping'],
+                            item['order'],
+                            DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(item['hourRequest'])),
+                            item['nameClient'],
+                            item['addressClient'],
+                            item['nameEnterprise'].toString().toUpperCase(),
+                            item['addressEnterprise'],
+                            item['totalFees'],
+                            'Aceitar'
+                        ),
                       ):Container();
                     }
                   }
@@ -155,23 +189,38 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
               height: height * 0.3,
               padding: EdgeInsets.all(12),
               alignment: Alignment.topCenter,
-              child: ListView(
-                children: [
-                  ContainerDelivery(
-                    photo: FirebaseAuth.instance.currentUser!.photoURL,
-                    enterprise: 'Empresa',
-                    address: 'Itapetininga',
-                    shipping: 'R\$ 5,00',
-                    onTap: () => _showDialog(),
-                  ),
-                  ContainerDelivery(
-                    photo: FirebaseAuth.instance.currentUser!.photoURL,
-                    enterprise: 'Empresa',
-                    address: 'Itapetininga',
-                    shipping: 'R\$ 5,00',
-                    onTap: () => _showDialog(),
-                  ),
-                ],
+              child: ListView.builder(
+                itemCount: _allResultsDelivery.length,
+                itemBuilder:(context,index) {
+                  DocumentSnapshot item = _allResultsDelivery[index];
+
+                  if (_allResultsReady.length == 0) {
+                    return Center(
+                        child: Text('Nenhum pedido encontrado',
+                          style: TextStyle(fontSize: 16, color: PaletteColor.primaryColor),
+                        )
+                    );
+                  } else {
+                    return ContainerDelivery(
+                      photo: item['logoUrl'],
+                      enterprise: item['nameEnterprise'].toString().toUpperCase(),
+                      address: item['addressEnterprise'],
+                      shipping: 'R\$ ${item['totalFees'].toStringAsFixed(2).replaceAll('.', ',')}',
+                      onTap: () =>
+                          _showDialog(
+                              item['idShopping'],
+                              item['order'],
+                              DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(item['hourRequest'])),
+                              item['nameClient'],
+                              item['addressClient'],
+                              item['nameEnterprise'].toString().toUpperCase(),
+                              item['addressEnterprise'],
+                              item['totalFees'],
+                              'Confirmar Entrega'
+                          ),
+                    );
+                  }
+                }
               ),
             ),
           ],

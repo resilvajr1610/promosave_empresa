@@ -1,5 +1,6 @@
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
+import '../Utils/text_const.dart';
 
 class ContainerRequestsEnterprise extends StatelessWidget {
 
@@ -8,13 +9,18 @@ class ContainerRequestsEnterprise extends StatelessWidget {
   final showDetailsRequests;
   final idRequests;
   final contMixed;
+  final priceMixed;
   final contSalt;
+  final priceSalt;
   final contSweet;
+  final priceSweet;
   final date;
   final textButton;
   final client;
   final type;
   final screen;
+  final typeDelivery;
+  final double totalFees;
 
   ContainerRequestsEnterprise({
     required this.onTapIcon,
@@ -24,11 +30,16 @@ class ContainerRequestsEnterprise extends StatelessWidget {
     required this.date,
     required this.client,
     required this.contMixed,
+    required this.priceMixed,
     required this.contSalt,
+    required this.priceSalt,
     required this.contSweet,
+    required this.priceSweet,
     required this.textButton,
     required this.type,
     required this.screen,
+    required this.typeDelivery,
+    required this.totalFees,
   });
 
   @override
@@ -77,7 +88,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                   text: client,color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
               ),
             ),
-            contMixed!=0?Row(
+            contMixed!=0 && typeDelivery!= TextConst.DELIVERYMAN?Row(
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 4),
@@ -90,12 +101,12 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 45),
                   child: TextCustom(
-                      text: 'R\$ ${(contMixed*10)},00',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+                      text: 'R\$ ${(contMixed*priceMixed).toString().replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
                   ),
                 ),
               ],
             ):Container(),
-            contSalt !=0?Row(
+            contSalt !=0 && typeDelivery!= TextConst.DELIVERYMAN?Row(
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 4),
@@ -108,12 +119,12 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 45),
                   child: TextCustom(
-                      text: 'R\$ ${(contSalt*10)},00',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+                      text: 'R\$ ${(contSalt*priceSalt).toString().replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
                   ),
                 ),
               ],
             ):Container(),
-            contSweet!=0? Row(
+            contSweet!=0 && typeDelivery!= TextConst.DELIVERYMAN? Row(
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 4),
@@ -126,32 +137,36 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 45),
                   child: TextCustom(
-                      text: 'R\$ ${(contSweet*10)},00',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+                      text: 'R\$ ${(contSweet*priceSweet).toString().replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
                   ),
                 ),
               ],
             ):Container(),
-            Container(
+            screen !='history'?Container(
               padding: EdgeInsets.symmetric(horizontal: 4,vertical: 5),
               width: width,
               child: TextCustom(
                   text: type,color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.bold,textAlign: TextAlign.start
               ),
-            ),
+            ):Container(),
             Row(
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 4,vertical: 5),
                   width: width*0.45,
                   child: TextCustom(
-                      text: 'Total',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.bold,textAlign: TextAlign.start
+                      text: typeDelivery!= TextConst.DELIVERYMAN?'Total':'Taxa de entrega',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.bold,textAlign: TextAlign.start
                   ),
                 ),
                 Spacer(),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 45),
-                  child: TextCustom(
-                      text: 'R\$ ${((contSalt*10) + (contSweet*10) + (contMixed*10)).toString()+',00'}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.bold,textAlign: TextAlign.start
+                  padding: EdgeInsets.symmetric(horizontal: 35),
+                  child: typeDelivery!= TextConst.DELIVERYMAN
+                      ?TextCustom(
+                        text: 'R\$ ${((contSalt*priceSalt) + (contSweet*priceSweet) + (contMixed*priceMixed)).toString().replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.bold,textAlign: TextAlign.start
+                      )
+                      :TextCustom(
+                      text: 'R\$ ${totalFees.toStringAsFixed(2).replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.bold,textAlign: TextAlign.start
                   ),
                 ),
               ],
@@ -170,7 +185,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                   colorBorder: PaletteColor.primaryColor
               ):TextCustom(text: textButton,size: 12.0,color: PaletteColor.primaryColor,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
             ):Container(),
-            screen =='history'?Container(
+            screen =='history' && typeDelivery!= TextConst.DELIVERYMAN?Container(
               margin: EdgeInsets.only(right: 42),
               child: Column(
                 children: [
