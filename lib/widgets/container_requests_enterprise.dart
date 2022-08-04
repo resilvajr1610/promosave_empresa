@@ -17,6 +17,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
   final date;
   final textButton;
   final client;
+  final enterprise;
   final type;
   final screen;
   final typeDelivery;
@@ -29,6 +30,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
     required this.idRequests,
     required this.date,
     required this.client,
+    required this.enterprise,
     required this.contMixed,
     required this.priceMixed,
     required this.contSalt,
@@ -85,7 +87,14 @@ class ContainerRequestsEnterprise extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 4,vertical: 5),
               width: width,
               child: TextCustom(
-                  text: client,color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+                  text: 'Cliente : '+client,color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+              ),
+            ),
+            typeDelivery!= TextConst.DELIVERYMAN?Container():Container(
+              padding: EdgeInsets.symmetric(horizontal: 4,vertical: 5),
+              width: width,
+              child: TextCustom(
+                  text: 'Estabelecimento : '+enterprise,color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
               ),
             ),
             contMixed!=0 && typeDelivery!= TextConst.DELIVERYMAN?Row(

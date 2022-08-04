@@ -83,7 +83,7 @@ class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpr
                 padding: EdgeInsets.symmetric(vertical: 8),
                 width: width,
                 child: TextCustom(
-                    text: 'Histórico de pedidos',color: PaletteColor.grey,size: 16.0,fontWeight: FontWeight.bold,textAlign: TextAlign.center
+                    text: 'Histórico de ${data?["type"]==TextConst.DELIVERYMAN?'Entregas':'Pedidos'}',color: PaletteColor.grey,size: 16.0,fontWeight: FontWeight.bold,textAlign: TextAlign.center
                 )
             ),
             Container(
@@ -137,6 +137,7 @@ class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpr
                     idRequests: item['order'],
                     date: DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(item['hourRequest'])),
                     client: item['nameClient'].toString().toUpperCase(),
+                    enterprise: item['nameEnterprise'].toString().toUpperCase(),
                     contMixed: item['quantMista'],
                     contSalt: item['quantSalgada'],
                     contSweet: item['quantDoce'],
