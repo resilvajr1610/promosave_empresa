@@ -1,12 +1,12 @@
 import '../Utils/export.dart';
 
-String ErrorListModel(item,type){
-  String text;
+double ErrorDoubleModel(item,type){
+  double number;
   try {
   dynamic data = item.get(FieldPath([type]));
-    text = data;
+  number = data;
   } on StateError catch (e) {
-    text = '';
+    number = 0.0;
   }
-  return text;
+  return number;
 }

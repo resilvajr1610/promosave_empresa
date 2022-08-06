@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
 import '../Utils/text_const.dart';
+import '../models/error_double_model.dart';
 
 class HomeDeliveryScreen extends StatefulWidget {
   const HomeDeliveryScreen({Key? key}) : super(key: key);
@@ -16,8 +17,13 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   List _allResultsReady=[];
   List _allResultsDelivery=[];
+  Map<String,dynamic>? data;
+  double feesDelivery = 0.0;
+  double totalFeesFinance = 0.0;
+  double totalDiscountFinance = 0.0;
+  double totalRequest = 0.0;
 
-  data()async{
+  dataShopping()async{
     var data = await db.collection("shopping")
         .where('status', isEqualTo: TextConst.ORDERAREADY)
         .get();
@@ -25,6 +31,28 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
     setState(() {
       _allResultsReady = data.docs;
     });
+  }
+
+  dataFees()async{
+    DocumentSnapshot snapshot = await db.collection('fees').doc('fees').get();
+    data = snapshot.data() as Map<String, dynamic>?;
+    feesDelivery = double.parse(data?['feesDelivery']);
+    print(feesDelivery);
+  }
+
+  dataFinance()async{
+
+    var year = DateTime.now().year;
+    var month = DateTime.now().month;
+
+    DocumentSnapshot snapshot = await db.collection('financeDelivery').doc(FirebaseAuth.instance.currentUser!.uid).get();
+    data = snapshot.data() as Map<String, dynamic>?;
+    totalFeesFinance = ErrorDoubleModel(snapshot,'totalFees$month$year') ;
+    totalDiscountFinance = ErrorDoubleModel(snapshot,'totalDiscount$month$year');
+    totalRequest = ErrorDoubleModel(snapshot,'totalRequest$month$year');
+    print('totalFeesFinance $totalFeesFinance');
+    print('totalDiscountFinance $totalDiscountFinance');
+    print('totalRequest $totalRequest');
   }
 
   dataDelivery()async{
@@ -38,7 +66,19 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
     });
   }
 
-  acceptDelivery(String idShopping,String type)async{
+  acceptDelivery(String idShopping,String type,double totalFees)async{
+
+    var year = DateTime.now().year;
+    var month = DateTime.now().month;
+
+    if(type!='Aceitar'){
+      db.collection('financeDelivery').doc(FirebaseAuth.instance.currentUser!.uid).set({
+        'totalFees$month$year': totalFeesFinance+totalFees,
+        'totalDiscount$month$year': totalDiscountFinance+(totalFees * (feesDelivery/100)),
+        'totalRequest$month$year': totalRequest+1,
+      });
+    }
+
     db.collection('shopping').doc(idShopping).update({
       'idDelivery':FirebaseAuth.instance.currentUser!.uid,
       'nameDelivery':FirebaseAuth.instance.currentUser!.displayName,
@@ -67,7 +107,7 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
                 colorBorder: PaletteColor.primaryColor,
                 heightCustom: 0.05,
                 widthCustom: 0.2,
-                onPressed: () =>acceptDelivery(idShopping,type),
+                onPressed: () =>acceptDelivery(idShopping,type,totalFees),
                 size: 14.0,
                 colorButton: PaletteColor.primaryColor,
               ),
@@ -89,8 +129,10 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
   @override
   void initState() {
     super.initState();
-    data();
+    dataShopping();
     dataDelivery();
+    dataFees();
+    dataFinance();
   }
 
   @override
@@ -128,6 +170,7 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
             ),
             SizedBox(height: 10),
             Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
               width: width,
               child: TextCustom(
                 text: 'Pedido prontos - Aguardando entregador',
@@ -177,6 +220,7 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
             SizedBox(height: 10),
             Container(
               width: width,
+              padding: EdgeInsets.symmetric(horizontal: 10),
               child: TextCustom(
                 text: 'Confirmar entrega',
                 size: 14.0,

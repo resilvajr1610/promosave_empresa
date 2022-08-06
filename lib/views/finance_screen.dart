@@ -1,5 +1,10 @@
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'package:promosave_empresa/Utils/text_const.dart';
+
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
+import '../models/error_double_model.dart';
 
 class FinanceScreen extends StatefulWidget {
 
@@ -8,6 +13,44 @@ class FinanceScreen extends StatefulWidget {
 }
 
 class _FinanceScreenState extends State<FinanceScreen> {
+
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  double totalFees = 0.0;
+  double totalDiscount = 0.0;
+  DocumentSnapshot? snapshot;
+  int month = DateTime.now().month;
+  int year = DateTime.now().year;
+  var today = DateTime.now();
+  final f = DateFormat('MMMM yyyy');
+
+  _dataFees(var data)async{
+
+     snapshot = await db.collection(data?["type"]==TextConst.DELIVERYMAN?"financeDelivery":'financeEnterprise').doc(FirebaseAuth.instance.currentUser!.uid).get();
+
+    setState(() {
+
+      totalFees = ErrorDoubleModel(snapshot,'totalFees${month}${year}');
+      totalDiscount = ErrorDoubleModel(snapshot,'totalDiscount${month}${year}');
+
+    });
+  }
+
+  _dataUser()async{
+    DocumentSnapshot snapshot = await db.collection("enterprise")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    Map<String,dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+
+    _dataFees(data);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Intl.defaultLocale = 'pt_BR';
+    _dataUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,13 +92,37 @@ class _FinanceScreenState extends State<FinanceScreen> {
               ),
               SizedBox(height: 10),
               ContainerFinance(
-                month: 'Maio',
-                year: '2022',
-                sales: 500,
-                fees: 46,
-                status: 'Pendente',
-                onTapNext: (){},
-                onTapPrevius: (){},
+                date: f.format(today),
+                sales: totalFees,
+                fees : totalDiscount,
+                status: totalFees == 0.0
+                    ?'': totalFees != 0.0 && ErrorStringModel(snapshot,'status${month}${year}')==''?'Pendente':'Pago',
+                onTapNext: (){
+                  setState(() {
+                    today = today.add(Duration(days: 30));
+                    month++;
+                    if(month>12){
+                      year++;
+                      month=1;
+                    }
+                    totalFees = ErrorDoubleModel(snapshot,'totalFees${month}${year}');
+                    totalDiscount = ErrorDoubleModel(snapshot,'totalDiscount${month}${year}');
+                    print('$month $year');
+                  });
+                },
+                onTapPrevius: (){
+                 setState(() {
+                   today = today.subtract(Duration(days: 30));
+                   month--;
+                   if(month<01){
+                     year--;
+                     month=12;
+                   }
+                   totalFees = ErrorDoubleModel(snapshot,'totalFees${month}${year}');
+                   totalDiscount = ErrorDoubleModel(snapshot,'totalDiscount${month}${year}');
+                   print('$month $year');
+                 });
+                },
               )
             ],
           ),

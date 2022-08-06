@@ -42,7 +42,7 @@ export '../widgets/container_question.dart';
 
 export '../models/user_model.dart';
 export '../models/bank_model.dart';
-export '../models/error_list_model.dart';
+export '../models/error_string_model.dart';
 export '../models/question_model.dart';
 export '../models/product_model.dart';
 export '../models/search_question_model.dart';

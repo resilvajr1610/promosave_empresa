@@ -3,6 +3,7 @@ import 'package:promosave_empresa/Utils/text_const.dart';
 
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
+import '../models/error_double_model.dart';
 import '../models/requests_model.dart';
 
 class RequestsEnterpriseScreen extends StatefulWidget {
@@ -21,6 +22,11 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
   bool showAccept = false;
   bool showWaiting = false;
   bool showDelivery = false;
+  double feesProduct = 0.0;
+  double totalProductFinance = 0.0;
+  double totalDiscountFinance = 0.0;
+  double totalRequest = 0.0;
+  Map<String,dynamic>? data;
 
   dataORDERCREATED()async{
     var data = await db.collection("shopping")
@@ -55,12 +61,36 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
     });
   }
 
+  dataFees()async{
+    DocumentSnapshot snapshot = await db.collection('fees').doc('fees').get();
+    data = snapshot.data() as Map<String, dynamic>?;
+    feesProduct = double.parse(data?['feesProduct']);
+    print(feesProduct);
+  }
+
+  dataFinance()async{
+
+    var year = DateTime.now().year;
+    var month = DateTime.now().month;
+
+    DocumentSnapshot snapshot = await db.collection('financeEnterprise').doc(FirebaseAuth.instance.currentUser!.uid).get();
+    data = snapshot.data() as Map<String, dynamic>?;
+    totalProductFinance = ErrorDoubleModel(snapshot,'totalProduct$month$year') ;
+    totalDiscountFinance = ErrorDoubleModel(snapshot,'totalDiscount$month$year');
+    totalRequest = ErrorDoubleModel(snapshot,'totalRequest$month$year');
+    print('totalFeesFinance $totalProductFinance');
+    print('totalDiscountFinance $totalDiscountFinance');
+    print('totalRequest $totalRequest');
+  }
+
   @override
   void initState() {
     super.initState();
     dataORDERCREATED();
     dataORDERACCEPTED();
     dataORDERAREADY();
+    dataFees();
+    dataFinance();
   }
 
   @override
@@ -208,6 +238,10 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                                 showRequests: false
                             )
                         );
+
+                        var year = DateTime.now().year;
+                        var month = DateTime.now().month;
+
                         return ContainerRequestsEnterprise(
                           typeDelivery: TextConst.ENTERPRISE,
                           totalFees: item['totalFees'],
@@ -227,7 +261,13 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                           showDetailsRequests: listRequests[index].showRequests,
                           onTapButtom: (){
                             db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.ORDERAREADY})
-                                .then((value) => Navigator.pushReplacementNamed(context, '/requests_enterprise'));
+                                .then((value){
+                              db.collection('financeEnterprise').doc(FirebaseAuth.instance.currentUser!.uid).set({
+                                'totalFees$month$year': totalProductFinance+item['priceMista']+item['priceSalgada']+item['priceDoce'],
+                                'totalDiscount$month$year': (totalDiscountFinance+(item['priceMista']+item['priceSalgada']+item['priceDoce'])) * (feesProduct/100),
+                                'totalRequest$month$year': totalRequest+1
+                              }).then((value) => Navigator.pushReplacementNamed(context, '/requests_enterprise'));
+                            });
                           },
                           onTapIcon: (){
                             setState(() {
