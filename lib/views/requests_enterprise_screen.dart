@@ -29,35 +29,26 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
   Map<String,dynamic>? data;
 
   dataORDERCREATED()async{
-    var data = await db.collection("shopping")
-        .where('idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .where('status', isEqualTo: TextConst.ORDERCREATED)
-        .get();
-
-    setState(() {
-      _resultsRequestORDERCREATED = data.docs;
+    StreamSubscription<QuerySnapshot> listener = await db.collection("shopping")
+      .where('idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+      .where('status', isEqualTo: TextConst.ORDERCREATED).snapshots().listen((query) {
+        _resultsRequestORDERCREATED = query.docs;
     });
   }
 
   dataORDERACCEPTED()async{
-    var data = await db.collection("shopping")
-        .where('idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .where('status', isEqualTo: TextConst.ORDERACCEPTED)
-        .get();
-
-    setState(() {
-      _resultsRequestORDERACCEPTED = data.docs;
+    StreamSubscription<QuerySnapshot> listener = await db.collection("shopping")
+      .where('idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+      .where('status', isEqualTo: TextConst.ORDERACCEPTED).snapshots().listen((query) {
+        _resultsRequestORDERACCEPTED = query.docs;
     });
   }
 
   dataORDERAREADY()async{
-    var data = await db.collection("shopping")
-        .where('idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .where('status', isEqualTo: TextConst.ORDERAREADY)
-        .get();
-
-    setState(() {
-      _resultsRequestORDERAREADY = data.docs;
+    StreamSubscription<QuerySnapshot> listener = await db.collection("shopping")
+      .where('idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+      .where('status', isEqualTo: TextConst.ORDERAREADY).snapshots().listen((query) {
+        _resultsRequestORDERAREADY = query.docs;
     });
   }
 

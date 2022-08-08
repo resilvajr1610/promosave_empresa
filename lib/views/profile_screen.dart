@@ -625,6 +625,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             print("Street :     " + street.toString());
                             print("village :  " + village);
                             print("city :    " + city);
+                            print("lat :    " + lat.toString());
+                            print("lng :    " + lng.toString());
                             predictions=[];
                           });
                         }

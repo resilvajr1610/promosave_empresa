@@ -17,14 +17,14 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
   int requests=0;
 
   _data() async {
-    var data = await db
-        .collection("products")
-        .where('idUser', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .get();
-
-    setState(() {
-      _resultsList = data.docs;
+    StreamSubscription<QuerySnapshot> listener = await db
+      .collection("products")
+      .where('idUser', isEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots().listen((query) {
+        setState(() {
+          _resultsList = query.docs;
+        });
     });
+
     return "complete";
   }
   _contRequests()async{

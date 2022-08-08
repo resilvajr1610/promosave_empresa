@@ -24,12 +24,12 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
   double totalRequest = 0.0;
 
   dataShopping()async{
-    var data = await db.collection("shopping")
-        .where('status', isEqualTo: TextConst.ORDERAREADY)
-        .get();
-
-    setState(() {
-      _allResultsReady = data.docs;
+    StreamSubscription<QuerySnapshot> listener = await db.collection("shopping")
+      .where('status', isEqualTo: TextConst.ORDERAREADY)
+      .snapshots().listen((query) {
+        setState(() {
+          _allResultsReady = query.docs;
+        });
     });
   }
 
@@ -56,13 +56,12 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
   }
 
   dataDelivery()async{
-    var data = await db.collection("shopping")
-        .where('status', isEqualTo: TextConst.ORDERDELIVERY)
-        .where('idDelivery', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .get();
-
-    setState(() {
-      _allResultsDelivery = data.docs;
+    StreamSubscription<QuerySnapshot> listener = await db.collection("shopping")
+      .where('status', isEqualTo: TextConst.ORDERDELIVERY)
+      .where('idDelivery', isEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots().listen((query) {
+        setState(() {
+          _allResultsDelivery = query.docs;
+        });
     });
   }
 
