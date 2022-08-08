@@ -73,6 +73,9 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
 
     if(type!='Aceitar'){
       db.collection('financeDelivery').doc(FirebaseAuth.instance.currentUser!.uid).set({
+        'idUser' : FirebaseAuth.instance.currentUser!.uid,
+        'photoURL$month$year' : FirebaseAuth.instance.currentUser!.photoURL!=null?FirebaseAuth.instance.currentUser!.photoURL:TextConst.LOGO,
+        'name$month$year' : FirebaseAuth.instance.currentUser!.displayName,
         'totalFees$month$year': totalFeesFinance+totalFees,
         'totalDiscount$month$year': totalDiscountFinance+(totalFees * (feesDelivery/100)),
         'totalRequest$month$year': totalRequest+1,

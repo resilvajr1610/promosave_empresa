@@ -48,6 +48,7 @@ class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpr
   @override
   void initState() {
     super.initState();
+    Intl.defaultLocale = 'pt_BR';
     dataUser();
   }
 

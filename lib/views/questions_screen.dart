@@ -1,4 +1,5 @@
 import 'package:promosave_empresa/Utils/text_const.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
@@ -98,25 +99,30 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           textAlign: TextAlign.center,
         ),
       ),
-      bottomSheet: Container(
-        color: PaletteColor.white,
-        padding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(FontAwesomeIcons.whatsapp,color: PaletteColor.green,size: 40,),
-            SizedBox(width:10),
-            Container(
-              width: width*0.75,
-              child: TextCustom(
-                  text: 'Dúvidas? Entre em contato pelo nosso WhatsApp',
-                  size: 16.0,
-                  color: PaletteColor.grey,
-                  fontWeight: FontWeight.normal,
-                  textAlign: TextAlign.start
-              ),
-            )
-          ],
+      bottomSheet: GestureDetector(
+        onTap: ()async{
+          await launch('https://wa.me/+554199952037?text=Dúvidas PromoSave');
+        },
+        child: Container(
+          color: PaletteColor.white,
+          padding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(FontAwesomeIcons.whatsapp,color: PaletteColor.green,size: 40,),
+              SizedBox(width:10),
+              Container(
+                width: width*0.75,
+                child: TextCustom(
+                    text: 'Dúvidas? Entre em contato pelo nosso WhatsApp',
+                    size: 16.0,
+                    color: PaletteColor.grey,
+                    fontWeight: FontWeight.normal,
+                    textAlign: TextAlign.start
+                ),
+              )
+            ],
+          ),
         ),
       ),
       body: Center(

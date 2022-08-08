@@ -263,6 +263,10 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                             db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.ORDERAREADY})
                                 .then((value){
                               db.collection('financeEnterprise').doc(FirebaseAuth.instance.currentUser!.uid).set({
+                                'idUser' : FirebaseAuth.instance.currentUser!.uid,
+                                'photoURL$month$year' : FirebaseAuth.instance.currentUser!.photoURL!=null
+                                    ?FirebaseAuth.instance.currentUser!.photoURL:TextConst.LOGO,
+                                'name$month$year' : FirebaseAuth.instance.currentUser!.displayName,
                                 'totalFees$month$year': totalProductFinance+item['priceMista']+item['priceSalgada']+item['priceDoce'],
                                 'totalDiscount$month$year': (totalDiscountFinance+(item['priceMista']+item['priceSalgada']+item['priceDoce'])) * (feesProduct/100),
                                 'totalRequest$month$year': totalRequest+1
