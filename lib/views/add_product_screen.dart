@@ -4,8 +4,9 @@ import '../utils/export.dart';
 class AddProductScreen extends StatefulWidget {
   final text;
   final buttonText;
+  final id;
 
-  AddProductScreen({required this.text, required this.buttonText});
+  AddProductScreen({required this.text, required this.buttonText,required this.id});
 
   @override
   _AddProductScreenState createState() => _AddProductScreenState();
@@ -15,11 +16,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   FirebaseStorage storage = FirebaseStorage.instance;
   FirebaseFirestore db = FirebaseFirestore.instance;
-  final controllerDescription = TextEditingController();
-  final controllerAvailable = TextEditingController();
-  final controllerQuantBag = TextEditingController();
-  final controllerPer = TextEditingController();
-  final controllerIn = TextEditingController();
+  var controllerDescription = TextEditingController();
+  var controllerAvailable = TextEditingController();
+  var controllerQuantBag = TextEditingController();
+  var controllerPer = TextEditingController();
+  var controllerIn = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   List titleRadio=['Salgada','Doce','Mista'];
   String selectedText="Salgada";
@@ -28,6 +29,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   bool _sending = false;
   int selectedRadioButton=0;
   ProductModel _productModel = ProductModel();
+  Map<String,dynamic>? data;
 
   verification(){
 
@@ -68,13 +70,23 @@ class _AddProductScreenState extends State<AddProductScreen> {
     _productModel.description = controllerDescription.text;
     _productModel.quantBag =  int.parse(controllerQuantBag.text);
 
-    db
-      .collection("products")
-      .doc(_productModel.idProduct)
-      .update(_productModel.toMap())
-      .then((value) {
-          Navigator.pushReplacementNamed(context, '/home_enterprise');
-    });
+    if(widget.text == 'Alterar Produto'){
+      db
+          .collection("products")
+          .doc(widget.id)
+          .update(_productModel.toMap())
+          .then((value) {
+        Navigator.pushReplacementNamed(context, '/home_enterprise');
+      });
+    }else{
+      db
+          .collection("products")
+          .doc(_productModel.idProduct)
+          .update(_productModel.toMap())
+          .then((value) {
+        Navigator.pushReplacementNamed(context, '/home_enterprise');
+      });
+    }
   }
 
   Future _savePhoto() async {
@@ -114,22 +126,72 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   _urlImageFirestore(String url) {
-    _productModel = ProductModel.createId();
 
-    Map<String, dynamic> dateUpdate = {
-      'photoUrl': url,
-      'idProduct' : _productModel.idProduct
-    };
+    if(widget.id==''){
+      _productModel = ProductModel.createId();
+      Map<String, dynamic> dateUpdate = {
+        'photoUrl': url,
+        'idProduct' : _productModel.idProduct
+      };
 
-    db
-        .collection("products")
-        .doc(_productModel.idProduct)
-        .set(dateUpdate)
-        .then((value) {
-      setState(() {
-        _sending = false;
+        db.collection("products")
+          .doc(_productModel.idProduct)
+          .set(dateUpdate)
+          .then((value) {
+        setState(() {
+          _sending = false;
+        });
       });
+    }else{
+      Map<String, dynamic> dateUpdate = {
+        'photoUrl': url,
+        'idProduct' : widget.id
+      };
+
+      db.collection("products")
+          .doc(widget.id)
+          .set(dateUpdate,SetOptions(merge: true))
+          .then((value) {
+        setState(() {
+          _sending = false;
+        });
+      });
+    }
+  }
+
+  _data()async{
+    DocumentSnapshot snapshot = await db.collection('products').doc(widget.id).get();
+    data = snapshot.data() as Map<String, dynamic>?;
+    setState(() {
+      controllerDescription = TextEditingController(text: data?['description']);
+      controllerAvailable = TextEditingController(text: data?['available'].toString());
+      controllerQuantBag = TextEditingController(text: data?['quantBag'].toString());
+      controllerPer = TextEditingController(text: data?['byPrice']);
+      controllerIn = TextEditingController(text: data?['inPrice']);
+      _urlPhoto = data?['photoUrl'];
+      selectedText = data?['product'];
+      if(selectedText == 'Salgada'){
+      setState(() {
+        selectedRadioButton = 0;
+      });
+      }else if(selectedText == 'Doce'){
+        setState(() {
+          selectedRadioButton = 1;
+        });
+      }else{
+        setState(() {
+          selectedRadioButton = 2;
+        });
+      }
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if(widget.text == 'Alterar Produto'){
+      _data();
+    }
   }
 
   @override

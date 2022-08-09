@@ -12,7 +12,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
   final priceMixed;
   final contSalt;
   final priceSalt;
-  final contSweet;
+  final int contSweet;
   final priceSweet;
   final date;
   final textButton;
@@ -22,6 +22,8 @@ class ContainerRequestsEnterprise extends StatelessWidget {
   final screen;
   final typeDelivery;
   final double totalFees;
+  final double ratingDouble;
+  final String ratingText;
 
   ContainerRequestsEnterprise({
     required this.onTapIcon,
@@ -42,6 +44,8 @@ class ContainerRequestsEnterprise extends StatelessWidget {
     required this.screen,
     required this.typeDelivery,
     required this.totalFees,
+    this.ratingDouble = 0.0,
+    this.ratingText = '',
   });
 
   @override
@@ -110,7 +114,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 45),
                   child: TextCustom(
-                      text: 'R\$ ${(contMixed*priceMixed).toString().replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+                      text: 'R\$ ${(contMixed*priceMixed).toStringAsFixed(2).replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
                   ),
                 ),
               ],
@@ -128,7 +132,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 45),
                   child: TextCustom(
-                      text: 'R\$ ${(contSalt*priceSalt).toString().replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+                      text: 'R\$ ${(contSalt*priceSalt).toStringAsFixed(2).replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
                   ),
                 ),
               ],
@@ -146,7 +150,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 45),
                   child: TextCustom(
-                      text: 'R\$ ${(contSweet*priceSweet).toString().replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+                      text: 'R\$ ${(contSweet*priceSweet).toStringAsFixed(2).replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
                   ),
                 ),
               ],
@@ -172,7 +176,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 35),
                   child: typeDelivery!= TextConst.DELIVERYMAN
                       ?TextCustom(
-                        text: 'R\$ ${((contSalt*priceSalt) + (contSweet*priceSweet) + (contMixed*priceMixed)).toString().replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.bold,textAlign: TextAlign.start
+                        text: 'R\$ ${((contSalt*priceSalt) + (contSweet*priceSweet) + (contMixed*priceMixed)).toStringAsFixed(2).replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.bold,textAlign: TextAlign.start
                       )
                       :TextCustom(
                       text: 'R\$ ${totalFees.toStringAsFixed(2).replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.bold,textAlign: TextAlign.start
@@ -208,7 +212,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                         ),
                       ),
                       Spacer(),
-                      RatingCustom(rating: 1.0)
+                      RatingCustom(rating: ratingDouble)
                     ],
                   ),
                   Container(
@@ -216,6 +220,18 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                     width: width,
                     child: TextCustom(
                         text: 'Comentário do cliente',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 4,vertical: 5),
+                    width: width,
+                    child: TextCustom(
+                      text: ratingText.toUpperCase(),
+                      color: PaletteColor.grey,
+                      size: 10.0,
+                      fontWeight: FontWeight.bold,
+                      textAlign: TextAlign.start,
+                      maxLines: 3,
                     ),
                   ),
                 ],

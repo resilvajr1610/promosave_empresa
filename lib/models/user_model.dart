@@ -13,6 +13,7 @@ class UserModel{
   String city="";
   String street="";
   String village="";
+  DateTime? date;
 
   Map<String,dynamic> toMap(){
     Map<String,dynamic> map = {
@@ -29,6 +30,7 @@ class UserModel{
       "street"  : this.street,
       "village" : this.village,
       "type"    : this.type,
+      "date"    : this.date,
     };
     return map;
   }

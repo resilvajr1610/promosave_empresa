@@ -3,6 +3,7 @@ import 'package:promosave_empresa/Utils/text_const.dart';
 
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
+import '../models/error_int_model.dart';
 
 class HomeEnterpriseScreen extends StatefulWidget {
   const HomeEnterpriseScreen({Key? key}) : super(key: key);
@@ -15,6 +16,8 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   List _resultsList = [];
   int requests=0;
+  int contBags = 0;
+  int contSave = 0;
 
   _data() async {
     StreamSubscription<QuerySnapshot> listener = await db
@@ -31,7 +34,7 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
     var data = await db
         .collection("shopping")
         .where('idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .where('status', isEqualTo: TextConst.ORDERCREATED)
+        .where('status', isNotEqualTo: TextConst.ORDERFINISHED)
         .get();
 
     setState(() {
@@ -40,11 +43,41 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
     return "complete";
   }
 
+  _moneySaved()async{
+
+    List _allMoney = [];
+    int acumulacontBags =0;
+
+    var data = await db.collection("shopping")
+        .where('idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    _allMoney = data.docs;
+    if(_allMoney.length != 0){
+      List<DocumentSnapshot> movimentacoes = data.docs.toList();
+
+      for (int i=0;i<_allMoney.length;i++){
+        DocumentSnapshot item = movimentacoes[i];
+        int bags = ErrorIntModel(item, "quantBagDoce") + ErrorIntModel(item, "quantBagSalgada") + ErrorIntModel(item, "quantBagMista");
+        acumulacontBags += bags;
+      }
+      setState(() {
+        contBags = acumulacontBags;
+        contSave = _allMoney.length;
+      });
+    }else{
+      setState(() {
+        contBags = 0;
+      });
+    }
+    print(contBags);
+  }
+
   @override
   void initState() {
     super.initState();
     _data();
     _contRequests();
+    _moneySaved();
   }
 
   @override
@@ -105,7 +138,7 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
                             )),
                         child: Center(
                             child: TextCustom(
-                          text: '2',
+                          text: contSave.toString(),
                           size: 24.0,
                           color: PaletteColor.white,
                           fontWeight: FontWeight.w500,
@@ -139,7 +172,7 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
                             )),
                         child: Center(
                             child: TextCustom(
-                          text: '4',
+                          text: contBags.toString(),
                           size: 24.0,
                           color: PaletteColor.white,
                           fontWeight: FontWeight.w500,
@@ -217,6 +250,7 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
                                   builder: (_) => AddProductScreen(
                                         text: 'Adicionar Produto',
                                         buttonText: 'Adicionar',
+                                        id: '',
                                       )));
                         },
                         child: Container(
@@ -257,6 +291,7 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
                                   builder: (_) => AddProductScreen(
                                         text: 'Alterar Produto',
                                         buttonText: 'Alterar',
+                                        id: item["idProduct"],
                                       )));
                         },
                         child: CardHome(

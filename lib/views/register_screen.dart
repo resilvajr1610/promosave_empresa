@@ -87,6 +87,7 @@ class _LoginState extends State<RegisterScreen>  with SingleTickerProviderStateM
                   _userModel.lat=lat;
                   _userModel.lng=lng;
                   _userModel.status=TextConst.WAITING;
+                  _userModel.date=DateTime.now();
                   _userModel.type= widget.type=="enterprise"? TextConst.ENTERPRISE : TextConst.DELIVERYMAN;
 
                   _saveData(_userModel);

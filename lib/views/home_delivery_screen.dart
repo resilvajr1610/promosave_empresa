@@ -57,7 +57,7 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
 
   dataDelivery()async{
     StreamSubscription<QuerySnapshot> listener = await db.collection("shopping")
-      .where('status', isEqualTo: TextConst.ORDERDELIVERY)
+      .where('status', isEqualTo: TextConst.DELIVERYTOHOME)
       .where('idDelivery', isEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots().listen((query) {
         setState(() {
           _allResultsDelivery = query.docs;
@@ -84,7 +84,7 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
     db.collection('shopping').doc(idShopping).update({
       'idDelivery':FirebaseAuth.instance.currentUser!.uid,
       'nameDelivery':FirebaseAuth.instance.currentUser!.displayName,
-      'status':type=='Aceitar'?TextConst.ORDERDELIVERY:TextConst.ORDERFINISHED
+      'status':type=='Aceitar'?TextConst.DELIVERYTOHOME:TextConst.ORDERFINISHED
     }).then((value) => Navigator.pushReplacementNamed(context, '/splash'));
   }
   
@@ -240,7 +240,7 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
                 itemBuilder:(context,index) {
                   DocumentSnapshot item = _allResultsDelivery[index];
 
-                  if (_allResultsReady.length == 0) {
+                  if (_allResultsDelivery.length == 0) {
                     return Center(
                         child: Text('Nenhum pedido encontrado',
                           style: TextStyle(fontSize: 16, color: PaletteColor.primaryColor),

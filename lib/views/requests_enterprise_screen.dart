@@ -3,6 +3,7 @@ import 'package:promosave_empresa/Utils/text_const.dart';
 
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
+import '../models/alert_model.dart';
 import '../models/error_double_model.dart';
 import '../models/requests_model.dart';
 
@@ -330,10 +331,35 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                           type: item['type'],
                           textButton: 'Confirmar retirada',
                           showDetailsRequests: listRequests[index].showRequests,
-                          onTapButtom: (){
-                            db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.ORDERAREADY})
-                                .then((value) => Navigator.pushReplacementNamed(context, '/requests_enterprise'));
-                          },
+                          onTapButtom: ()=>AlertModel().alert('Confirmação !', 'Quem retirou o produto?', PaletteColor.grey, PaletteColor.grey, context,
+                                [
+                                  ButtonCustom(
+                                    onPressed: (){
+                                      db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.ORDERFINISHED})
+                                          .then((value) => Navigator.pushReplacementNamed(context, '/requests_enterprise'));
+                                    },
+                                    text: 'Cliente',
+                                    colorBorder: PaletteColor.greyInput,
+                                    colorButton: PaletteColor.greyInput,
+                                    colorText: PaletteColor.white,
+                                    size: 14.0,
+                                    heightCustom: 0.08,
+                                    widthCustom: 0.7,
+                                  ),
+                                  item['type']==TextConst.ORDERAREADY?ButtonCustom(
+                                    onPressed: (){
+                                      db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.DELIVERYGET})
+                                          .then((value) => Navigator.pushReplacementNamed(context, '/requests_enterprise'));
+                                    },
+                                    text: 'Entregador',
+                                    colorBorder: PaletteColor.greyInput,
+                                    colorButton: PaletteColor.greyInput,
+                                    colorText: PaletteColor.white,
+                                    size: 14.0,
+                                    heightCustom: 0.08,
+                                    widthCustom: 0.7,
+                                  ):Container(),
+                                ]),
                           onTapIcon: (){
                             setState(() {
                               listRequests[index].showRequests?listRequests[index].showRequests=false:listRequests[index].showRequests=true;

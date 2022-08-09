@@ -25,6 +25,9 @@ dependencies:
   auto_size_text: ^3.0.0
   url_launcher: ^6.0.15
   intl: ^0.17.0
+  flutter_local_notifications: ^9.7.0
+  firebase_messaging:
+  http:
 
 dev_dependencies:
   flutter_test:

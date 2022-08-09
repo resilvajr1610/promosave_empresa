@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
 import '../Utils/text_const.dart';
+import '../models/error_double_model.dart';
 import '../models/requests_model.dart';
 
 class HistoryRequestsEnterpriseScreen extends StatefulWidget {
@@ -129,6 +130,8 @@ class _HistoryRequestsEnterpriseScreenState extends State<HistoryRequestsEnterpr
                       )
                   );
                   return ContainerRequestsEnterprise(
+                    ratingDouble: ErrorDoubleModel(item,'ratingDouble'),
+                    ratingText: ErrorStringModel(item, 'ratingText'),
                     typeDelivery: data?["type"],
                     totalFees: item['totalFees'],
                     screen: 'history',

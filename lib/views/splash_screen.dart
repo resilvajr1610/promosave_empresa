@@ -1,6 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:promosave_empresa/models/notification_model.dart';
+
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
 import '../Utils/text_const.dart';
+import '../service/local_push_notitication.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -10,6 +14,17 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+  storeNotificationToken()async{
+    String token = (await FirebaseMessaging.instance.getToken())!;
+    FirebaseFirestore.instance.collection('enterprise').doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({
+      'token' : token
+    },SetOptions(merge: true)).then((value){
+      // sendNotification('Empresa', 'Promo save', token);
+    });
+    print('token : $token');
+  }
 
   verification()async{
     FirebaseFirestore db = FirebaseFirestore.instance;
@@ -82,7 +97,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
+    FirebaseMessaging.instance.getInitialMessage();
+    FirebaseMessaging.onMessage.listen((event) {
+      LocalNotificationService.display(event);
+    });
+
     _mockCheckForSession();
+    storeNotificationToken();
   }
 
   @override

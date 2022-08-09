@@ -1,4 +1,5 @@
 import 'package:google_place/google_place.dart';
+import 'package:promosave_empresa/models/error_int_model.dart';
 import '../Utils/colors.dart';
 import '../Utils/text_const.dart';
 import '../models/alert_model.dart';
