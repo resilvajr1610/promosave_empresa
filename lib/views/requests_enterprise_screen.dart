@@ -5,6 +5,7 @@ import '../Utils/colors.dart';
 import '../Utils/export.dart';
 import '../models/alert_model.dart';
 import '../models/error_double_model.dart';
+import '../models/notification_model.dart';
 import '../models/requests_model.dart';
 
 class RequestsEnterpriseScreen extends StatefulWidget {
@@ -28,6 +29,16 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
   double totalDiscountFinance = 0.0;
   double totalRequest = 0.0;
   Map<String,dynamic>? data;
+  String token = '';
+
+  dataClient(idClient)async{
+    DocumentSnapshot snapshot = await db.collection("user").doc(idClient).get();
+    Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+    setState(() {
+      token = data?["token"];
+      print(token);
+    });
+  }
 
   dataORDERCREATED()async{
     StreamSubscription<QuerySnapshot> listener = await db.collection("shopping")
@@ -178,8 +189,14 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                                 textButton: 'Aceitar',
                                 showDetailsRequests: listRequests[index].showRequests,
                                 onTapButtom: (){
+                                  dataClient(item['idClient']);
                                   db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.ORDERACCEPTED})
-                                      .then((value) => Navigator.pushReplacementNamed(context, '/requests_enterprise'));
+                                      .then((value){
+                                   if(token!=''){
+                                     sendNotification('Pedido n° ${item['order']} aceito!','Seu pedido está sendo preparado',token);
+                                   }
+                                    Navigator.pushReplacementNamed(context, '/requests_enterprise');
+                                  });
                                 },
                                 onTapIcon: (){
                                   setState(() {
@@ -254,6 +271,13 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                           onTapButtom: (){
                             db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.ORDERAREADY})
                                 .then((value){
+
+                              dataClient(item['idClient']);
+                              if(token!=''){
+                                sendNotification('Pedido n° ${item['order']} esta pronto!',
+                                    item['type']=='Para entrega'?'Seu pedido está sendo preparado para envio':'Aguardando sua retirada',token);
+                              }
+
                               db.collection('financeEnterprise').doc(FirebaseAuth.instance.currentUser!.uid).set({
                                 'idUser' : FirebaseAuth.instance.currentUser!.uid,
                                 'photoURL$month$year' : FirebaseAuth.instance.currentUser!.photoURL!=null
@@ -336,7 +360,14 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                                   ButtonCustom(
                                     onPressed: (){
                                       db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.ORDERFINISHED})
-                                          .then((value) => Navigator.pushReplacementNamed(context, '/requests_enterprise'));
+                                          .then((value){
+                                        dataClient(item['idCliente']);
+                                        if(token!=''){
+                                          sendNotification('Pedido n° ${item['order']} foi entregue!',
+                                              'Bom Apetite! Aguardamos sua avaliação!',token);
+                                        }
+                                        Navigator.pushReplacementNamed(context, '/requests_enterprise');
+                                      });
                                     },
                                     text: 'Cliente',
                                     colorBorder: PaletteColor.greyInput,
@@ -349,7 +380,14 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                                   item['type']==TextConst.ORDERAREADY?ButtonCustom(
                                     onPressed: (){
                                       db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.DELIVERYGET})
-                                          .then((value) => Navigator.pushReplacementNamed(context, '/requests_enterprise'));
+                                          .then((value){
+                                        dataClient(item['idCliente']);
+                                        if(token!=''){
+                                          sendNotification('Pedido n° ${item['order']} foi entregue!',
+                                              'Bom Apetite! Aguardamos sua avaliação!',token);
+                                        }
+                                        Navigator.pushReplacementNamed(context, '/requests_enterprise');
+                                      });
                                     },
                                     text: 'Entregador',
                                     colorBorder: PaletteColor.greyInput,

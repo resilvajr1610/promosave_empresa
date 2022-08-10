@@ -96,14 +96,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 Container(
                   alignment: Alignment.centerLeft,
                   width: width*0.8,
-                  child: TextCustom(text: 'E - mail',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+                  child: TextCustom(text: 'E-mail',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
                 ),
                 InputRegister(
                   icons: Icons.height,
                   sizeIcon: 0.0,
                   width: width*0.8,
                   controller: _controllerEmail,
-                  hint:'E - mail',
+                  hint:'E-mail',
                   fonts: 14.0,
                   keyboardType: TextInputType.text,
                   colorBorder: PaletteColor.greyLight,

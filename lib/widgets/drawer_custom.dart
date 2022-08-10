@@ -29,7 +29,7 @@ class DrawerCustom extends StatelessWidget {
     return SingleChildScrollView(
       child: Container(
         width: width * 0.7,
-        height: height * 0.9,
+        height: height,
         color: Colors.white,
         padding: EdgeInsets.all(8),
         child: Column(

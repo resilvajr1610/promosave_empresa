@@ -4,6 +4,7 @@ import '../Utils/colors.dart';
 import '../Utils/export.dart';
 import '../Utils/text_const.dart';
 import '../models/error_double_model.dart';
+import '../models/notification_model.dart';
 
 class HomeDeliveryScreen extends StatefulWidget {
   const HomeDeliveryScreen({Key? key}) : super(key: key);
@@ -22,6 +23,8 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
   double totalFeesFinance = 0.0;
   double totalDiscountFinance = 0.0;
   double totalRequest = 0.0;
+  String token = '';
+  String tokenClient = '';
 
   dataShopping()async{
     StreamSubscription<QuerySnapshot> listener = await db.collection("shopping")
@@ -65,7 +68,25 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
     });
   }
 
-  acceptDelivery(String idShopping,String type,double totalFees)async{
+  dataEnterprise(String idEnterprise)async{
+    DocumentSnapshot snapshot = await db.collection("enterprise").doc(idEnterprise).get();
+    Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+    setState(() {
+      token = data?["token"];
+      print(token);
+    });
+  }
+
+  dataClient(String idClient)async{
+    DocumentSnapshot snapshot = await db.collection("user").doc(idClient).get();
+    Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+    setState(() {
+      tokenClient = data?["token"];
+      print(tokenClient);
+    });
+  }
+
+  acceptDelivery(String idShopping,String type,double totalFees, String idEnterprise,int order,String idClient)async{
 
     var year = DateTime.now().year;
     var month = DateTime.now().month;
@@ -85,10 +106,27 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
       'idDelivery':FirebaseAuth.instance.currentUser!.uid,
       'nameDelivery':FirebaseAuth.instance.currentUser!.displayName,
       'status':type=='Aceitar'?TextConst.DELIVERYTOHOME:TextConst.ORDERFINISHED
-    }).then((value) => Navigator.pushReplacementNamed(context, '/splash'));
+    }).then((value){
+
+      if(token!=''){
+        if(type=='Aceitar'){
+          dataEnterprise(idEnterprise);
+          sendNotification('Entregador: ${FirebaseAuth.instance.currentUser!.displayName} aceitou a entrega!',
+              'Pedido nº ${order}',token);
+        }else{
+          dataClient(idClient);
+          sendNotification('Pedido Finalizado!','Pedido n° ${order} foi entregue ao cliente!',token);
+          sendNotification('Pedido n° ${order} foi entregue!',
+              'Bom Apetite! Aguardamos sua avaliação!',tokenClient);
+        }
+      }
+
+
+      Navigator.pushReplacementNamed(context, '/splash');
+    });
   }
   
-  _showDialog(String idShopping,int order, String hourRequest,String nameClient,String clientAddress, String nameEnterprise,String enterpriseAddress, double totalFees,String type) {
+  _showDialog(String idShopping,int order, String hourRequest,String nameClient,String clientAddress, String nameEnterprise,String enterpriseAddress, double totalFees,String type,String idEnterprise,String idClient) {
     showGeneralDialog(
         context: context,
         barrierDismissible: false,
@@ -109,7 +147,7 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
                 colorBorder: PaletteColor.primaryColor,
                 heightCustom: 0.05,
                 widthCustom: 0.2,
-                onPressed: () =>acceptDelivery(idShopping,type,totalFees),
+                onPressed: () =>acceptDelivery(idShopping,type,totalFees,idEnterprise,order,idClient),
                 size: 14.0,
                 colorButton: PaletteColor.primaryColor,
               ),
@@ -204,15 +242,17 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
                         address: item['addressEnterprise'],
                         shipping: 'R\$ ${item['totalFees'].toStringAsFixed(2).replaceAll('.', ',')}',
                         onTap: () => _showDialog(
-                            item['idShopping'],
-                            item['order'],
-                            DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(item['hourRequest'])),
-                            item['nameClient'],
-                            item['addressClient'],
-                            item['nameEnterprise'].toString().toUpperCase(),
-                            item['addressEnterprise'],
-                            item['totalFees'],
-                            'Aceitar'
+                          item['idShopping'],
+                          item['order'],
+                          DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(item['hourRequest'])),
+                          item['nameClient'],
+                          item['addressClient'],
+                          item['nameEnterprise'].toString().toUpperCase(),
+                          item['addressEnterprise'],
+                          item['totalFees'],
+                          'Aceitar',
+                          item['idEnterprise'],
+                          item['idClient'],
                         ),
                       ):Container();
                     }
@@ -262,7 +302,9 @@ class _HomeDeliveryScreenState extends State<HomeDeliveryScreen> {
                               item['nameEnterprise'].toString().toUpperCase(),
                               item['addressEnterprise'],
                               item['totalFees'],
-                              'Confirmar Entrega'
+                              'Confirmar Entrega',
+                              item['idEnterprise'],
+                              item['idClient'],
                           ),
                     );
                   }
