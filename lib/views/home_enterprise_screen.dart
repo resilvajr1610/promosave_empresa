@@ -105,7 +105,7 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: height * 0.9,
+          height: height * 0.95,
           padding: EdgeInsets.all(12),
           alignment: Alignment.topCenter,
           child: Column(
@@ -226,7 +226,7 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
                     ],
                   )),
               Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  padding: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
                   width: width,
                   alignment: Alignment.centerLeft,
                   child: TextCustom(

@@ -1,3 +1,5 @@
+import 'package:promosave_empresa/models/product_model.dart';
+
 import '../Utils/colors.dart';
 import '../utils/export.dart';
 
@@ -355,52 +357,64 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       text: 'Preço do produto',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
                   )
               ),
-              Row(
-                children: [
-                  Container(
-                      padding: EdgeInsets.only(left: 20),
-                      child: TextCustom(
-                          text: 'De',color: PaletteColor.grey,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
-                      )
-                  ),
-                  InputRegister(
-                    controller: controllerIn,
-                    hint: 'R\$ 00,00',
-                    fonts: 13.0,
-                    keyboardType: TextInputType.number,
-                    width: width*0.25,
-                    sizeIcon: 0.0,
-                    icons: Icons.camera_alt,
-                    colorBorder: PaletteColor.greyLight,
-                    background: PaletteColor.greyLight,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      CentavosInputFormatter(moeda: true),
-                    ],
-                  ),
-                  Spacer(),
-                  TextCustom(
-                      text: 'Por',color: PaletteColor.grey,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                    child: InputRegister(
-                      controller: controllerPer,
-                      hint: 'R\$ 00,00',
-                      fonts: 13.0,
-                      keyboardType: TextInputType.number,
-                      width: width*0.25,
-                      sizeIcon: 0.0,
-                      icons: Icons.camera_alt,
-                      colorBorder: PaletteColor.greyLight,
-                      background: PaletteColor.greyLight,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        CentavosInputFormatter(moeda: true),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                width: width,
+                child: Row(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 30,
+                          child: TextCustom(
+                              text: 'De',color: PaletteColor.grey,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+                          ),
+                        ),
+                        InputRegister(
+                          controller: controllerIn,
+                          hint: 'R\$ 00,00',
+                          fonts: 13.0,
+                          keyboardType: TextInputType.number,
+                          width: width*0.25,
+                          sizeIcon: 0.0,
+                          icons: Icons.camera_alt,
+                          colorBorder: PaletteColor.greyLight,
+                          background: PaletteColor.greyLight,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            CentavosInputFormatter(moeda: true),
+                          ],
+                        ),
                       ],
                     ),
-                  ),
-                ],
+                    Spacer(),
+                    Row(
+                      children: [
+                        Container(
+                          width: 30,
+                          child: TextCustom(
+                              text: 'Por',color: PaletteColor.grey,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
+                          ),
+                        ),
+                        InputRegister(
+                          controller: controllerPer,
+                          hint: 'R\$ 00,00',
+                          fonts: 13.0,
+                          keyboardType: TextInputType.number,
+                          width: width*0.25,
+                          sizeIcon: 0.0,
+                          icons: Icons.camera_alt,
+                          colorBorder: PaletteColor.greyLight,
+                          background: PaletteColor.greyLight,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            CentavosInputFormatter(moeda: true),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 10),
               Container(

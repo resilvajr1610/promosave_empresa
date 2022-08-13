@@ -8,7 +8,6 @@ export '../views/register_screen.dart';
 export '../views/splash_screen.dart';
 export '../views/initial_screen.dart';
 export '../views/login_screen.dart';
-export '../views/maps_screen.dart';
 export '../views/profile_screen.dart';
 export '../views/definition_screen.dart';
 export '../views/waiting_screen.dart';

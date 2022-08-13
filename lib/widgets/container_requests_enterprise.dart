@@ -1,3 +1,5 @@
+import 'package:promosave_empresa/models/product_model.dart';
+
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
 import '../Utils/text_const.dart';
@@ -112,7 +114,6 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                 ),
                 Spacer(),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 45),
                   child: TextCustom(
                       text: 'R\$ ${(contMixed*priceMixed).toStringAsFixed(2).replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
                   ),
@@ -120,6 +121,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
               ],
             ):Container(),
             contSalt !=0 && typeDelivery!= TextConst.DELIVERYMAN?Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 4),
@@ -130,7 +132,6 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                 ),
                 Spacer(),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 45),
                   child: TextCustom(
                       text: 'R\$ ${(contSalt*priceSalt).toStringAsFixed(2).replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
                   ),
@@ -138,6 +139,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
               ],
             ):Container(),
             contSweet!=0 && typeDelivery!= TextConst.DELIVERYMAN? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 4),
@@ -148,7 +150,6 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                 ),
                 Spacer(),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 45),
                   child: TextCustom(
                       text: 'R\$ ${(contSweet*priceSweet).toStringAsFixed(2).replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start
                   ),
@@ -163,6 +164,7 @@ class ContainerRequestsEnterprise extends StatelessWidget {
               ),
             ):Container(),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 4,vertical: 5),
@@ -173,7 +175,6 @@ class ContainerRequestsEnterprise extends StatelessWidget {
                 ),
                 Spacer(),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 35),
                   child: typeDelivery!= TextConst.DELIVERYMAN
                       ?TextCustom(
                         text: 'R\$ ${((contSalt*priceSalt) + (contSweet*priceSweet) + (contMixed*priceMixed)).toStringAsFixed(2).replaceAll('.', ',')}',color: PaletteColor.grey,size: 12.0,fontWeight: FontWeight.bold,textAlign: TextAlign.start

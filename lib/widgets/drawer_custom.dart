@@ -69,7 +69,7 @@ class DrawerCustom extends StatelessWidget {
                   type == TextConst.ENTERPRISE
                       ? '/home_enterprise'
                       : '/home_delivery'),
-              title: 'home',
+              title: 'Home',
               icon: Icons.home_outlined,
             ),
             TitleDrawer(

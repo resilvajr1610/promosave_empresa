@@ -195,8 +195,10 @@ class _LoginState extends State<RegisterScreen>  with SingleTickerProviderStateM
                 child: TextCustom(text: widget.type=="enterprise"?'Olá, cadastre a sua empresa!':'Olá, seja um de nosso entregadores!',
                   color: PaletteColor.grey,size: 16.0,fontWeight: FontWeight.bold,textAlign: TextAlign.center,),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+              Container(
+                width: width,
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: TextCustom(text:widget.type=="enterprise"? 'Nome do estabelecimento':'Nome',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
               ),
               InputRegister(
@@ -210,8 +212,10 @@ class _LoginState extends State<RegisterScreen>  with SingleTickerProviderStateM
                 colorBorder: PaletteColor.greyLight,
                 background: PaletteColor.greyLight,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+              Container(
+                width: width,
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: TextCustom(text: widget.type=="enterprise"?'CNPJ':'CPF',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
               ),
               InputRegister(
@@ -229,8 +233,10 @@ class _LoginState extends State<RegisterScreen>  with SingleTickerProviderStateM
                   widget.type=="enterprise"?CnpjInputFormatter():CpfInputFormatter()
                 ],
               ),
-              widget.type=="enterprise"?Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+              widget.type=="enterprise"?Container(
+                width: width,
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: TextCustom(text: 'Telefone',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
               ):Container(width: width*0.8,),
               widget.type=="enterprise"?InputRegister(
@@ -248,8 +254,10 @@ class _LoginState extends State<RegisterScreen>  with SingleTickerProviderStateM
                   TelefoneInputFormatter()
                 ],
               ):Container(width: width*0.8),
-              widget.type=="enterprise"?Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+              widget.type=="enterprise"?Container(
+                width: width,
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: TextCustom(text: 'Endereço',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
               ):Container(width: width*0.8),
               widget.type=="enterprise"?Container(
@@ -318,9 +326,11 @@ class _LoginState extends State<RegisterScreen>  with SingleTickerProviderStateM
                       },
                     );
                   }),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: TextCustom(text: 'E - mail',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
+              Container(
+                width: width,
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: TextCustom(text: 'E-mail',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
               ),
               InputRegister(
                 icons: Icons.height,
@@ -333,8 +343,10 @@ class _LoginState extends State<RegisterScreen>  with SingleTickerProviderStateM
                 colorBorder: PaletteColor.greyLight,
                 background: PaletteColor.greyLight,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+              Container(
+                width: width,
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: TextCustom(text: 'Senha',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
               ),
               InputPassword(
@@ -357,8 +369,10 @@ class _LoginState extends State<RegisterScreen>  with SingleTickerProviderStateM
                   });
                 },
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+              Container(
+                width: width,
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: TextCustom(text: 'Confirmar Senha',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.center,),
               ),
               InputPassword(

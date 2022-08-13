@@ -1,3 +1,5 @@
+import 'package:promosave_empresa/models/product_model.dart';
+
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
 
@@ -137,49 +139,53 @@ class _RegisterBankScreenState extends State<RegisterBankScreen> {
                 background: PaletteColor.white,
               ),
               SizedBox(height: 10),
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: TextCustom(text: 'Conta',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start,),
-                      ),
-                      InputRegister(
-                        icons: Icons.height,
-                        sizeIcon: 0.0,
-                        width: width*0.55,
-                        controller: _controllerAcount,
-                        hint: '00000000',
-                        fonts: 14.0,
-                        keyboardType: TextInputType.number,
-                        colorBorder: PaletteColor.primaryColor,
-                        background: PaletteColor.white,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: TextCustom(text: 'Digito',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start,),
-                      ),
-                      InputRegister(
-                        icons: Icons.height,
-                        sizeIcon: 0.0,
-                        width: width*0.19,
-                        controller: _controllerDigit,
-                        hint: '1',
-                        fonts: 14.0,
-                        keyboardType: TextInputType.number,
-                        colorBorder: PaletteColor.primaryColor,
-                        background: PaletteColor.white,
-                      ),
-                    ],
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: TextCustom(text: 'Conta',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start,),
+                        ),
+                        InputRegister(
+                          icons: Icons.height,
+                          sizeIcon: 0.0,
+                          width: width*0.55,
+                          controller: _controllerAcount,
+                          hint: '00000000',
+                          fonts: 14.0,
+                          keyboardType: TextInputType.number,
+                          colorBorder: PaletteColor.primaryColor,
+                          background: PaletteColor.white,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: TextCustom(text: 'Digito',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start,),
+                        ),
+                        InputRegister(
+                          icons: Icons.height,
+                          sizeIcon: 0.0,
+                          width: width*0.19,
+                          controller: _controllerDigit,
+                          hint: '1',
+                          fonts: 14.0,
+                          keyboardType: TextInputType.number,
+                          colorBorder: PaletteColor.primaryColor,
+                          background: PaletteColor.white,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               Spacer(),
               Padding(
