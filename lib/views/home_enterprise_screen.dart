@@ -31,16 +31,14 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
     return "complete";
   }
   _contRequests()async{
-    var data = await db
-        .collection("shopping")
+    StreamSubscription<QuerySnapshot> listener = await db.collection("shopping")
         .where('idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .where('status', isNotEqualTo: TextConst.ORDERFINISHED)
-        .get();
-
-    setState(() {
-      requests = data.docs.length;
+        .snapshots().listen((query) {
+           setState(() {
+             requests = query.docs.length;
+           });
     });
-    return "complete";
   }
 
   _moneySaved()async{
