@@ -1,6 +1,7 @@
 import 'package:promosave_empresa/models/product_model.dart';
 
 import '../Utils/colors.dart';
+import '../models/alert_model.dart';
 import '../utils/export.dart';
 
 class AddProductScreen extends StatefulWidget {
@@ -77,17 +78,33 @@ class _AddProductScreenState extends State<AddProductScreen> {
           .collection("products")
           .doc(widget.id)
           .update(_productModel.toMap())
-          .then((value) {
-        Navigator.pushReplacementNamed(context, '/home_enterprise');
-      });
+          .then((value)=>AlertModel().alert('Sucesso!', 'Seu Produtudo foi atualizado!', PaletteColor.green, PaletteColor.grey, context, [
+        SizedBox(
+          height: 30,
+          width: 100,
+          child: ButtonCustom(
+            size: 15.0,
+            onPressed: ()=> Navigator.pushReplacementNamed(context, '/home_enterprise'),
+            text: 'OK',
+          ),
+        )
+      ]));
     }else{
       db
           .collection("products")
           .doc(_productModel.idProduct)
           .update(_productModel.toMap())
-          .then((value) {
-        Navigator.pushReplacementNamed(context, '/home_enterprise');
-      });
+          .then((value)=>AlertModel().alert('Sucesso!', 'Novo produto criado!', PaletteColor.green, PaletteColor.grey, context, [
+        SizedBox(
+          height: 30,
+          width: 100,
+          child: ButtonCustom(
+            size: 15.0,
+            onPressed: ()=> Navigator.pushReplacementNamed(context, '/home_enterprise'),
+            text: 'OK',
+          ),
+        )
+      ]));
     }
   }
 

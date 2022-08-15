@@ -1,3 +1,5 @@
+import 'package:promosave_empresa/Utils/colors.dart';
+
 import '../Utils/export.dart';
 
 class ButtonCustom extends StatelessWidget {
@@ -13,10 +15,10 @@ class ButtonCustom extends StatelessWidget {
   ButtonCustom({
     required this.onPressed,
     required this.text,
-    required this.size,
-    required this.colorButton,
-    required this.colorText,
-    required this.colorBorder,
+    this.size = 30.0,
+    this.colorButton = PaletteColor.primaryColor,
+    this.colorText = PaletteColor.white,
+    this.colorBorder = PaletteColor.primaryColor,
     this.widthCustom = 1.0,
     this.heightCustom = 1.0
   });

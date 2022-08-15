@@ -73,6 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       email = data?["email"];
       phone = data?["phone"];
       address = data?["address"];
+      city = data?["city"];
       urlPhotoProfile = data?["urlPhotoProfile"]??'';
       urlPhotoBanner = data?["urlPhotoBanner"]??"";
       startHours = data?["startHours"]??"";
@@ -180,9 +181,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if(type==TextConst.ENTERPRISE){
         db.collection('cities').doc(city).set({
           "city":city,
-        }).then((value) => Navigator.pushReplacementNamed(context, "/splash"));
+        }).then((value) => AlertModel().alert('Sucesso!', 'Seu seus dados foram atualizados!', PaletteColor.green, PaletteColor.grey, context, [
+          SizedBox(
+            height: 30,
+            width: 100,
+            child: ButtonCustom(
+              size: 15.0,
+              onPressed: ()=>  Navigator.pushReplacementNamed(context, "/splash"),
+              text: 'OK',
+            ),
+          )
+        ]));
       }else{
-        Navigator.pushReplacementNamed(context, "/splash");
+        AlertModel().alert('Sucesso!', 'Seu seus dados foram atualizados!', PaletteColor.green, PaletteColor.grey, context, [
+          SizedBox(
+            height: 30,
+            width: 100,
+            child: ButtonCustom(
+              size: 15.0,
+              onPressed: ()=>  Navigator.pushReplacementNamed(context, "/splash"),
+              text: 'OK',
+            ),
+          )
+        ]);
       }
     });
   }

@@ -17,14 +17,4 @@ class AlertModel{
           );
         });
   }
-  // zoomImage(BuildContext context,String url,List<Widget> listActions){
-  //   showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         return ShowImage(
-  //             url: url,
-  //             listActions: listActions
-  //         );
-  //       });
-  // }
 }

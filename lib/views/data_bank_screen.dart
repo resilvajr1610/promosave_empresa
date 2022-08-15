@@ -1,5 +1,8 @@
+import 'package:promosave_empresa/models/product_model.dart';
+
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
+import '../models/alert_model.dart';
 
 class DataBankScreen extends StatefulWidget {
 
@@ -63,7 +66,17 @@ class _DataBankScreenState extends State<DataBankScreen> {
 
   _saveData(BankModel bankModel,final idUser){
     db.collection("enterprise").doc(idUser).update(_bankModel.toMap()).then((_)
-    => Navigator.pushReplacementNamed(context, "/splash"));
+    => AlertModel().alert('Sucesso!', 'Seu seus dados foram atualizados!', PaletteColor.green, PaletteColor.grey, context,[
+      SizedBox(
+        height: 30,
+        width: 100,
+        child: ButtonCustom(
+          size: 15.0,
+          onPressed: ()=>  Navigator.pushReplacementNamed(context, "/splash"),
+          text: 'OK',
+        ),
+      )
+    ]));
   }
 
   _dataEnterprise()async{
@@ -164,49 +177,47 @@ class _DataBankScreenState extends State<DataBankScreen> {
                 background: PaletteColor.white,
               ),
               SizedBox(height: 10),
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: TextCustom(text: 'Conta',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start,),
-                      ),
-                      InputRegister(
-                        icons: Icons.height,
-                        sizeIcon: 0.0,
-                        width: width*0.55,
-                        controller: _controllerAcount,
-                        hint: '00000000',
-                        fonts: 14.0,
-                        keyboardType: TextInputType.number,
-                        colorBorder: PaletteColor.primaryColor,
-                        background: PaletteColor.white,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: TextCustom(text: 'Digito',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start,),
-                      ),
-                      InputRegister(
-                        icons: Icons.height,
-                        sizeIcon: 0.0,
-                        width: width*0.19,
-                        controller: _controllerDigit,
-                        hint: '1',
-                        fonts: 14.0,
-                        keyboardType: TextInputType.number,
-                        colorBorder: PaletteColor.primaryColor,
-                        background: PaletteColor.white,
-                      ),
-                    ],
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextCustom(text: 'Conta',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start,),
+                        InputRegister(
+                          icons: Icons.height,
+                          sizeIcon: 0.0,
+                          width: width*0.55,
+                          controller: _controllerAcount,
+                          hint: '00000000',
+                          fonts: 14.0,
+                          keyboardType: TextInputType.number,
+                          colorBorder: PaletteColor.primaryColor,
+                          background: PaletteColor.white,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextCustom(text: 'Digito',color: PaletteColor.primaryColor,size: 14.0,fontWeight: FontWeight.normal,textAlign: TextAlign.start,),
+                        InputRegister(
+                          icons: Icons.height,
+                          sizeIcon: 0.0,
+                          width: width*0.19,
+                          controller: _controllerDigit,
+                          hint: '1',
+                          fonts: 14.0,
+                          keyboardType: TextInputType.number,
+                          colorBorder: PaletteColor.primaryColor,
+                          background: PaletteColor.white,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               Spacer(),
               Padding(
