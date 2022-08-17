@@ -35,17 +35,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Map<String,dynamic>? data;
 
   verification(){
-
     if(controllerDescription.text.isNotEmpty){
       if(controllerQuantBag.text.isNotEmpty){
         if(controllerIn.text.isNotEmpty){
           if(controllerPer.text.isNotEmpty){
             if(controllerAvailable.text.isNotEmpty){
-              if(_urlPhoto!=""){
-                  _saveFirebase();
-              }else{
-                showSnackBar(context,'Tire uma foto do produto ',_scaffoldKey);
-              }
+                _saveFirebase();
             }else{
               showSnackBar(context,'Defina a quantidade de sacolas disponíveis ',_scaffoldKey);
             }
@@ -61,7 +56,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
     }else{
       showSnackBar(context,'Verifique a descrição',_scaffoldKey);
     }
-
   }
 
   _saveFirebase(){
@@ -77,7 +71,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       db
           .collection("products")
           .doc(widget.id)
-          .update(_productModel.toMap())
+          .set(_productModel.toMap(),SetOptions(merge: true))
           .then((value)=>AlertModel().alert('Sucesso!', 'Seu Produtudo foi atualizado!', PaletteColor.green, PaletteColor.grey, context, [
         SizedBox(
           height: 30,
@@ -90,10 +84,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
         )
       ]));
     }else{
+      print('id : ${_productModel.idProduct}');
       db
           .collection("products")
           .doc(_productModel.idProduct)
-          .update(_productModel.toMap())
+          .set(_productModel.toMap(),SetOptions(merge: true))
           .then((value)=>AlertModel().alert('Sucesso!', 'Novo produto criado!', PaletteColor.green, PaletteColor.grey, context, [
         SizedBox(
           height: 30,
@@ -147,7 +142,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
   _urlImageFirestore(String url) {
 
     if(widget.id==''){
-      _productModel = ProductModel.createId();
       Map<String, dynamic> dateUpdate = {
         'photoUrl': url,
         'idProduct' : _productModel.idProduct
@@ -208,6 +202,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
   @override
   void initState() {
     super.initState();
+    if(widget.id==''){
+      _productModel = ProductModel.createId();
+    }
     if(widget.text == 'Alterar Produto'){
       _data();
     }
@@ -457,15 +454,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
               ),
               SizedBox(height: 10),
-              ButtonCustom(
-                  onPressed: ()=> verification(),
-                  widthCustom: 0.75,
-                  heightCustom: 0.07,
-                  text:  widget.buttonText,
-                  size: 14,
-                  colorButton: PaletteColor.primaryColor,
-                  colorText: PaletteColor.white,
-                  colorBorder: PaletteColor.primaryColor
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                child: ButtonCustom(
+                    onPressed: ()=> verification(),
+                    widthCustom: 0.85,
+                    heightCustom: 0.07,
+                    text:  widget.buttonText,
+                    size: 14,
+                    colorButton: PaletteColor.primaryColor,
+                    colorText: PaletteColor.white,
+                    colorBorder: PaletteColor.primaryColor
+                ),
               )
             ],
           ),

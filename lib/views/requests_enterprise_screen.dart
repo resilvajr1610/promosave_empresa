@@ -43,7 +43,7 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
   dataORDERCREATED()async{
     StreamSubscription<QuerySnapshot> listener = await db.collection("shopping")
       .where('idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-      .where('status', isEqualTo: TextConst.ORDERCREATED).snapshots().listen((query) {
+      .where('status', isEqualTo: TextConst.ORDERCREATED).orderBy('order').snapshots().listen((query) {
         _resultsRequestORDERCREATED = query.docs;
     });
   }
@@ -51,7 +51,7 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
   dataORDERACCEPTED()async{
     StreamSubscription<QuerySnapshot> listener = await db.collection("shopping")
       .where('idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-      .where('status', isEqualTo: TextConst.ORDERACCEPTED).snapshots().listen((query) {
+      .where('status', isEqualTo: TextConst.ORDERACCEPTED).orderBy('order').snapshots().listen((query) {
         _resultsRequestORDERACCEPTED = query.docs;
     });
   }
@@ -59,7 +59,7 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
   dataORDERAREADY()async{
     StreamSubscription<QuerySnapshot> listener = await db.collection("shopping")
       .where('idEnterprise', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-      .where('status', isEqualTo: TextConst.ORDERAREADY).snapshots().listen((query) {
+      .where('status', isEqualTo: TextConst.ORDERAREADY).orderBy('order').snapshots().listen((query) {
         _resultsRequestORDERAREADY = query.docs;
     });
   }
@@ -190,13 +190,50 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                                 showDetailsRequests: listRequests[index].showRequests,
                                 onTapButtom: (){
                                   dataClient(item['idClient']);
-                                  db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.ORDERACCEPTED})
-                                      .then((value){
-                                   if(token!=''){
-                                     sendNotification('Pedido n° ${item['order']} aceito!','Seu pedido está sendo preparado',token);
-                                   }
-                                    Navigator.pushReplacementNamed(context, '/requests_enterprise');
-                                  });
+                                  AlertModel().alert('Confirmação !', 'Quem deseja aceitar esse pedido n° ${item['order']} agora?', PaletteColor.grey, PaletteColor.grey, context,
+                                      [
+                                        ButtonCustom(
+                                          onPressed: (){
+                                            Navigator.pop(context);
+                                            db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.ORDERACCEPTED})
+                                                .then((value){
+                                              if(token!=''){
+                                                sendNotification('Pedido n° ${item['order']} aceito!','Seu pedido está sendo preparado',token);
+                                              }
+                                              AlertModel().alert('Sucesso!', 'Pedido n° ${item['order']} aceito!', PaletteColor.green, PaletteColor.grey, context,[
+                                                SizedBox(
+                                                  height: 30,
+                                                  width: 100,
+                                                  child: ButtonCustom(
+                                                    size: 15.0,
+                                                    onPressed: ()=>Navigator.pop(context),
+                                                    text: 'OK',
+                                                  ),
+                                                )
+                                              ]);
+                                            });
+                                          },
+                                          text: 'Aceitar Agora',
+                                          colorBorder: PaletteColor.green,
+                                          colorButton: PaletteColor.green,
+                                          colorText: PaletteColor.white,
+                                          size: 14.0,
+                                          heightCustom: 0.08,
+                                          widthCustom: 0.7,
+                                        ),
+                                        ButtonCustom(
+                                          onPressed: (){
+                                            Navigator.pop(context);
+                                          },
+                                          text: 'Não aceitar agora',
+                                          colorBorder: PaletteColor.greyInput,
+                                          colorButton: PaletteColor.greyInput,
+                                          colorText: PaletteColor.white,
+                                          size: 14.0,
+                                          heightCustom: 0.08,
+                                          widthCustom: 0.7,
+                                        ),
+                                      ]);
                                 },
                                 onTapIcon: (){
                                   setState(() {
@@ -269,25 +306,63 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                           textButton: 'Pronto',
                           showDetailsRequests: listRequests[index].showRequests,
                           onTapButtom: (){
-                            db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.ORDERAREADY})
-                                .then((value){
+                            AlertModel().alert('Confirmação !', 'O pedido n° ${item['order']} está pronto?', PaletteColor.grey, PaletteColor.grey, context,
+                                [
+                                  ButtonCustom(
+                                    onPressed: (){
+                                      Navigator.pop(context);
+                                      db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.ORDERAREADY})
+                                          .then((value){
 
-                              dataClient(item['idClient']);
-                              if(token!=''){
-                                sendNotification('Pedido n° ${item['order']} esta pronto!',
-                                    item['type']=='Para entrega'?'Seu pedido está sendo preparado para envio':'Aguardando sua retirada',token);
-                              }
+                                        dataClient(item['idClient']);
+                                        if(token!=''){
+                                          sendNotification('Pedido n° ${item['order']} esta pronto!',
+                                              item['type']=='Para entrega'?'Seu pedido está sendo preparado para envio':'Aguardando sua retirada',token);
+                                        }
 
-                              db.collection('financeEnterprise').doc(FirebaseAuth.instance.currentUser!.uid).set({
-                                'idUser' : FirebaseAuth.instance.currentUser!.uid,
-                                'photoURL$month$year' : FirebaseAuth.instance.currentUser!.photoURL!=null
-                                    ?FirebaseAuth.instance.currentUser!.photoURL:TextConst.LOGO,
-                                'name$month$year' : FirebaseAuth.instance.currentUser!.displayName,
-                                'totalFees$month$year': totalProductFinance+item['priceMista']+item['priceSalgada']+item['priceDoce'],
-                                'totalDiscount$month$year': (totalDiscountFinance+(item['priceMista']+item['priceSalgada']+item['priceDoce'])) * (feesProduct/100),
-                                'totalRequest$month$year': totalRequest+1
-                              }).then((value) => Navigator.pushReplacementNamed(context, '/requests_enterprise'));
-                            });
+                                        db.collection('financeEnterprise').doc(FirebaseAuth.instance.currentUser!.uid).set({
+                                          'idUser' : FirebaseAuth.instance.currentUser!.uid,
+                                          'photoURL$month$year' : FirebaseAuth.instance.currentUser!.photoURL!=null
+                                              ?FirebaseAuth.instance.currentUser!.photoURL:TextConst.LOGO,
+                                          'name$month$year' : FirebaseAuth.instance.currentUser!.displayName,
+                                          'totalFees$month$year': totalProductFinance+item['priceMista']+item['priceSalgada']+item['priceDoce'],
+                                          'totalDiscount$month$year': (totalDiscountFinance+(item['priceMista']+item['priceSalgada']+item['priceDoce'])) * (feesProduct/100),
+                                          'totalRequest$month$year': totalRequest+1
+                                        });
+                                      });
+                                      AlertModel().alert('Sucesso!', 'Pedido n° ${item['order']} atualizado!', PaletteColor.green, PaletteColor.grey, context,[
+                                        SizedBox(
+                                          height: 30,
+                                          width: 100,
+                                          child: ButtonCustom(
+                                            size: 15.0,
+                                            onPressed: ()=> Navigator.pop(context),
+                                            text: 'OK',
+                                          ),
+                                        )
+                                      ]);
+                                    },
+                                    text: 'Sim, está pronto',
+                                    colorBorder: PaletteColor.green,
+                                    colorButton: PaletteColor.green,
+                                    colorText: PaletteColor.white,
+                                    size: 14.0,
+                                    heightCustom: 0.08,
+                                    widthCustom: 0.7,
+                                  ),
+                                  ButtonCustom(
+                                    onPressed: (){
+                                      Navigator.pop(context);
+                                    },
+                                    text: 'Não está pronto',
+                                    colorBorder: PaletteColor.greyInput,
+                                    colorButton: PaletteColor.greyInput,
+                                    colorText: PaletteColor.white,
+                                    size: 14.0,
+                                    heightCustom: 0.08,
+                                    widthCustom: 0.7,
+                                  ),
+                                ]);
                           },
                           onTapIcon: (){
                             setState(() {
@@ -361,17 +436,28 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                                     onPressed: (){
                                       db.collection('shopping').doc(item['idShopping']).update({'status':TextConst.ORDERFINISHED})
                                           .then((value){
-                                        dataClient(item['idCliente']);
+                                        dataClient(item['idClient']);
+                                        Navigator.pop(context);
                                         if(token!=''){
                                           sendNotification('Pedido n° ${item['order']} foi entregue!',
                                               'Bom Apetite! Aguardamos sua avaliação!',token);
                                         }
-                                        Navigator.pushReplacementNamed(context, '/requests_enterprise');
+                                        AlertModel().alert('Sucesso!', 'Pedido n° ${item['order']} finalizado!', PaletteColor.green, PaletteColor.grey, context,[
+                                          SizedBox(
+                                            height: 30,
+                                            width: 100,
+                                            child: ButtonCustom(
+                                              size: 15.0,
+                                              onPressed: ()=>  Navigator.pop(context),
+                                              text: 'OK',
+                                            ),
+                                          )
+                                        ]);
                                       });
                                     },
                                     text: 'Cliente',
-                                    colorBorder: PaletteColor.greyInput,
-                                    colorButton: PaletteColor.greyInput,
+                                    colorBorder: PaletteColor.green,
+                                    colorButton: PaletteColor.green,
                                     colorText: PaletteColor.white,
                                     size: 14.0,
                                     heightCustom: 0.08,
@@ -386,7 +472,6 @@ class _RequestsEnterpriseScreenState extends State<RequestsEnterpriseScreen> {
                                           sendNotification('Pedido n° ${item['order']} foi entregue!',
                                               'Bom Apetite! Aguardamos sua avaliação!',token);
                                         }
-                                        Navigator.pushReplacementNamed(context, '/requests_enterprise');
                                       });
                                     },
                                     text: 'Entregador',

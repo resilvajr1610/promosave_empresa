@@ -276,7 +276,7 @@ class _HomeEnterpriseScreenState extends State<HomeEnterpriseScreen> {
                     DocumentSnapshot item = _resultsList[index - 1];
 
                     String product = item["product"];
-                    final photo = item["photoUrl"];
+                    final photo = ErrorStringModel(item,"photoUrl");
                     final available = item["available"];
                     final inPrice = item["inPrice"];
                     final byPrice = item["byPrice"];

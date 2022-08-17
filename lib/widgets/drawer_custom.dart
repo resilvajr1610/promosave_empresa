@@ -41,9 +41,8 @@ class DrawerCustom extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: photo == null
                         ? CircleAvatar(
-                            backgroundColor: PaletteColor.primaryColor,
-                            backgroundImage:
-                                AssetImage('assets/image/logo.png'))
+                            backgroundColor: PaletteColor.greyInput,
+                            child: Icon(Icons.account_circle,color: PaletteColor.white,size: 40,),)
                         : CircleAvatar(
                             backgroundColor: PaletteColor.primaryColor,
                             backgroundImage: NetworkImage(photo),

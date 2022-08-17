@@ -1,5 +1,6 @@
 import '../Utils/colors.dart';
 import '../Utils/export.dart';
+import '../Utils/text_const.dart';
 
 class CardHome extends StatelessWidget {
 
@@ -34,8 +35,9 @@ class CardHome extends StatelessWidget {
         width: width*0.5,
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: NetworkImage(image),
-            fit: BoxFit.cover
+            // alignment: Alignment.topCenter,
+            image: NetworkImage(image!=''?image:TextConst.PRODUCTSTANDARD),
+            fit: image!=''?BoxFit.cover:BoxFit.fill
           ),
         ),
         child: Container(
