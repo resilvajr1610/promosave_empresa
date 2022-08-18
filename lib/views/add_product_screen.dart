@@ -68,6 +68,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     _productModel.quantBag =  int.parse(controllerQuantBag.text);
 
     if(widget.text == 'Alterar Produto'){
+      _productModel.idProduct = widget.id;
       db
           .collection("products")
           .doc(widget.id)
@@ -181,7 +182,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       controllerQuantBag = TextEditingController(text: data?['quantBag'].toString());
       controllerPer = TextEditingController(text: data?['byPrice']);
       controllerIn = TextEditingController(text: data?['inPrice']);
-      _urlPhoto = data?['photoUrl'];
+      _urlPhoto = data?['photoUrl']??'';
       selectedText = data?['product'];
       if(selectedText == 'Salgada'){
       setState(() {

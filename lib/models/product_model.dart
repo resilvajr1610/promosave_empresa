@@ -23,6 +23,7 @@ class ProductModel{
       "byPrice"    : this.byPrice,
       "description": this.description,
       "quantBag"   : this.quantBag,
+      "idProduct"   : this.idProduct,
     };
     return map;
   }
