@@ -33,6 +33,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   int selectedRadioButton=0;
   ProductModel _productModel = ProductModel();
   Map<String,dynamic>? data;
+  int products = 0;
 
   verification(){
     if(controllerDescription.text.isNotEmpty){
@@ -69,6 +70,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     if(widget.text == 'Alterar Produto'){
       _productModel.idProduct = widget.id;
+
+      db.collection('enterprise').doc(FirebaseAuth.instance.currentUser!.uid).update({
+        'products' : products
+      });
+
       db
           .collection("products")
           .doc(widget.id)
@@ -86,6 +92,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
       ]));
     }else{
       print('id : ${_productModel.idProduct}');
+
+      db.collection('enterprise').doc(FirebaseAuth.instance.currentUser!.uid).update({
+        'products' : products+1
+      });
+
       db
           .collection("products")
           .doc(_productModel.idProduct)
@@ -200,9 +211,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
     });
   }
 
+  _contProducts()async{
+    DocumentSnapshot snapshot = await db.collection('enterprise').doc(FirebaseAuth.instance.currentUser!.uid).get();
+    data = snapshot.data() as Map<String, dynamic>?;
+    setState(() {
+      products = data?['products']??0;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    _contProducts();
     if(widget.id==''){
       _productModel = ProductModel.createId();
     }
