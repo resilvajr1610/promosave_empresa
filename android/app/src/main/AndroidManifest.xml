@@ -9,9 +9,11 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
    <application
-        android:label="Promo Save Empresa"
+        android:label="PromoSave Parceiros"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:exported="true"
+       >
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -39,6 +41,13 @@
            android:name="com.google.firebase.messaging.default_notification_channel_id"
            android:value="mychanel"
            />
+       <service
+           android:name=".java.MyFirebaseMessagingService"
+           android:exported="false">
+           <intent-filter>
+               <action android:name="com.google.firebase.MESSAGING_EVENT" />
+           </intent-filter>
+       </service>
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
